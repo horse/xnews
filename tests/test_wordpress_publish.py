@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.wordpress_publish import (
     build_post_payload,
+    load_manifest,
     parse_markdown_file,
     rewrite_internal_markdown_links,
     wordpress_dates,
@@ -48,6 +49,21 @@ class WordpressPublishTests(unittest.TestCase):
             rewritten,
             "[記事](https://example.jp/yen-intervention/) と [短報](https://example.jp/briefs/)",
         )
+
+    def test_load_manifest_normalizes_yaml_timestamp_to_string(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "wordpress.yml"
+            path.write_text(
+                "content_dir: content\n"
+                "publish_at: 2026-08-01T06:00:00+09:00\n"
+                "status: publish\n"
+                "comment_status: closed\n"
+                "ping_status: closed\n"
+                "posts: [sample.md]\n",
+                encoding="utf-8",
+            )
+            manifest = load_manifest(path)
+        self.assertEqual(manifest["publish_at"], "2026-08-01T06:00:00+09:00")
 
     def test_build_post_payload_maps_publish_fields(self):
         meta = {
