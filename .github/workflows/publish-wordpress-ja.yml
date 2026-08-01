@@ -1,0 +1,43 @@
+name: Publish Japanese WordPress edition
+
+on:
+  push:
+    branches:
+      - wordpress-publish
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wordpress-ja-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements-wordpress.txt
+
+      - name: Run publisher tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Validate edition
+        run: python tools/wordpress_publish.py wordpress/ja/2026-08-01/wordpress.yml
+
+      - name: Publish to WordPress
+        env:
+          WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
+          WP_USERNAME: ${{ secrets.WP_USERNAME }}
+          WP_APPLICATION_PASSWORD: ${{ secrets.WP_APPLICATION_PASSWORD }}
+          WP_AUTHOR_ID: ${{ secrets.WP_AUTHOR_ID }}
+        run: python tools/wordpress_publish.py wordpress/ja/2026-08-01/wordpress.yml --publish
