@@ -4,13 +4,20 @@ on:
   push:
     branches:
       - remove-trend-briefs
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .remove-trend-briefs-trigger
+      - tools/remove_trend_briefs.py
+      - .github/workflows/remove-trend-briefs.yml
 
 permissions:
   contents: write
 
 jobs:
   remove:
-    if: contains(github.event.head_commit.message, '[run-remove-trend-briefs]')
+    if: github.event_name == 'pull_request' || contains(github.event.head_commit.message, '[run-remove-trend-briefs]')
     runs-on: ubuntu-latest
     steps:
       - name: Check out removal branch
