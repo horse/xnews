@@ -46,15 +46,15 @@ class WordpressPublishTests(unittest.TestCase):
         )
 
     def test_rewrite_internal_markdown_links_uses_published_links(self):
-        body = "[記事](./yen-intervention.md) と [短報](./briefs.md)"
+        body = "[為替記事](./yen-intervention.md) と [映画記事](./spider-man.md)"
         links = {
             "yen-intervention": "https://example.jp/yen-intervention/",
-            "briefs": "https://example.jp/briefs/",
+            "spider-man": "https://example.jp/spider-man/",
         }
         rewritten = rewrite_internal_markdown_links(body, links)
         self.assertEqual(
             rewritten,
-            "[記事](https://example.jp/yen-intervention/) と [短報](https://example.jp/briefs/)",
+            "[為替記事](https://example.jp/yen-intervention/) と [映画記事](https://example.jp/spider-man/)",
         )
 
     def test_load_manifest_normalizes_yaml_timestamp_to_string(self):
