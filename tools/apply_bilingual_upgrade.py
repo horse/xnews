@@ -5,6 +5,7 @@ import base64
 import hashlib
 import io
 import json
+import lzma
 import re
 import shutil
 import tarfile
@@ -14,10 +15,17 @@ ROOT = Path(__file__).resolve().parents[1]
 PARTS_DIR = ROOT / ".upgrade"
 WORKFLOW = ROOT / ".github/workflows/apply-bilingual-upgrade.yml"
 SCRIPT = ROOT / "tools/apply_bilingual_upgrade.py"
+PART_NAMES = ["part-04.txt", "part-05.txt", "part-06.txt"]
+EXPECTED_HASHES = {
+    "part-04.txt": "cb1d5b8182c5ee17b35efe2f58fed889698f2cf754289944db5bd0b9dc267288",
+    "part-05.txt": "249134a8e7f09ed2ae163c56895a13d1698dd9ead986c9530934cab41a03df8d",
+    "part-06.txt": "7297b1c8d313ba9294e50c1420d23d7ab2d8e76ab114f65a29ab205cfcc25940",
+}
 
 
-def safe_extract(data: bytes) -> None:
-    with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as archive:
+def safe_extract(xz_data: bytes) -> None:
+    tar_data = lzma.decompress(xz_data)
+    with tarfile.open(fileobj=io.BytesIO(tar_data), mode="r:") as archive:
         for member in archive.getmembers():
             target = (ROOT / member.name).resolve()
             if ROOT.resolve() not in target.parents and target != ROOT.resolve():
@@ -43,19 +51,23 @@ def validate() -> None:
     for index in range(1, 6):
         zh.extend(parse_js(ROOT / f"assets/data-{index}.js", "XNEWS_ARTICLES"))
         ja.extend(parse_js(ROOT / f"assets/ja-data-{index}.js", "XNEWS_JA_ARTICLES"))
+
     if len(zh) != 29 or len(ja) != 29:
         raise RuntimeError(f"article count mismatch: zh={len(zh)}, ja={len(ja)}")
+
     zh_slugs = [item["slug"] for item in zh]
     ja_slugs = [item["slug"] for item in ja]
     if len(set(zh_slugs)) != 29 or len(set(ja_slugs)) != 29:
         raise RuntimeError("duplicate slug")
     if set(zh_slugs) != set(ja_slugs):
         raise RuntimeError("bilingual slug mismatch")
+
     for item in zh:
         if len(item.get("summary", "")) < 70:
             raise RuntimeError(f"Chinese summary too short: {item['slug']}")
         if len(item.get("body", [])) < 4:
             raise RuntimeError(f"Chinese body too short: {item['slug']}")
+
     for item in ja:
         summary = item.get("summary", "")
         body = item.get("body", [])
@@ -68,10 +80,15 @@ def validate() -> None:
         else:
             if len(body) < 4 or body_chars < 350:
                 raise RuntimeError(f"Japanese standard article too short: {item['slug']}")
+
     content_dir = ROOT / "content/ja/2026-08-01"
-    article_files = sorted(path for path in content_dir.glob("*.md") if path.name not in {"index.md", "briefs.md"})
+    article_files = sorted(
+        path for path in content_dir.glob("*.md")
+        if path.name not in {"index.md", "briefs.md"}
+    )
     if len(article_files) != 29:
         raise RuntimeError(f"Japanese Markdown count mismatch: {len(article_files)}")
+
     for path in article_files:
         text = path.read_text(encoding="utf-8")
         if not text.startswith("---\n"):
@@ -82,9 +99,11 @@ def validate() -> None:
             raise RuntimeError(f"publish time mismatch: {path}")
         if "excerpt:" not in text or "## 出典" not in text:
             raise RuntimeError(f"missing excerpt or sources: {path}")
+
     index = (content_dir / "index.md").read_text(encoding="utf-8")
     if index.count("./") < 30:
         raise RuntimeError("daily index links incomplete")
+
     print(json.dumps({
         "validated": 29,
         "chinese_summary_min": min(len(item["summary"]) for item in zh),
@@ -94,18 +113,21 @@ def validate() -> None:
 
 
 def main() -> int:
-    parts = sorted(PARTS_DIR.glob("part-*.txt"))
-    if len(parts) != 6:
-        raise RuntimeError(f"expected 6 archive parts, found {len(parts)}")
-    values = []
-    for path in parts:
+    values: list[str] = []
+    for name in PART_NAMES:
+        path = PARTS_DIR / name
         value = path.read_text(encoding="ascii").strip()
+        digest = hashlib.sha256(value.encode()).hexdigest()
+        print(f"PART {name} length={len(value)} sha256={digest}")
+        if digest != EXPECTED_HASHES[name]:
+            raise RuntimeError(f"archive part hash mismatch: {name}")
         values.append(value)
-        print(f"PART {path.name} length={len(value)} sha256={hashlib.sha256(value.encode()).hexdigest()}")
+
     encoded = "".join(values)
     print(f"TOTAL length={len(encoded)}")
     safe_extract(base64.b64decode(encoded, validate=True))
     validate()
+
     shutil.rmtree(PARTS_DIR)
     SCRIPT.unlink(missing_ok=True)
     WORKFLOW.unlink(missing_ok=True)
