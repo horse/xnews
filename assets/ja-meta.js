@@ -1,1 +1,1 @@
-window.XNEWS_JA_META={"site":{"date":"2026年8月1日","dateISO":"2026-08-01","published":"2026-08-01T07:00:00+09:00","base":"/xnews","jaBase":"/xnews/ja"}};
+window.XNEWS_JA_META={"site":{"date":"2026年8月2日","dateISO":"2026-08-02","published":"2026-08-02T06:00:00+09:00","base":"/xnews","jaBase":"/xnews/ja"}};
