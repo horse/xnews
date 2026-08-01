@@ -1,0 +1,5 @@
+Local verification before merge:
+- python -m unittest tests/test_daily_edition_integrity.py -v: 4 tests passed
+- node --check assets/site.js: passed
+- node --check assets/data-6.js: passed
+- WordPress manifest: 9 existing files (8 reports + daily index)
