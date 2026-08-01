@@ -45,46 +45,39 @@ jobs:
           python - <<'PY'
           from __future__ import annotations
 
-          import base64
           import json
           import os
-          import urllib.error
-          import urllib.parse
-          import urllib.request
+          import time
           from pathlib import Path
 
-          from tools.wordpress_publish import load_manifest, parse_markdown_file
+          from tools.wordpress_publish import (
+              WordpressClient,
+              load_manifest,
+              parse_markdown_file,
+          )
 
-          site = os.environ['WP_SITE_URL'].rstrip('/')
-          username = os.environ['WP_USERNAME']
-          password = ''.join(os.environ['WP_APPLICATION_PASSWORD'].split())
-          authorization = 'Basic ' + base64.b64encode(f'{username}:{password}'.encode()).decode()
           target_slug = '2026-08-01-briefs'
+          client = WordpressClient(
+              os.environ['WP_SITE_URL'],
+              os.environ['WP_USERNAME'],
+              os.environ['WP_APPLICATION_PASSWORD'],
+          )
 
-          def request_json(method: str, path: str):
-              request = urllib.request.Request(
-                  site + path,
-                  method=method,
-                  headers={
-                      'Authorization': authorization,
-                      'Accept': 'application/json',
-                      'User-Agent': 'XNEWS-WordPress-Maintenance/1.0',
-                  },
-              )
-              try:
-                  with urllib.request.urlopen(request, timeout=60) as response:
-                      return json.loads(response.read().decode('utf-8'))
-              except urllib.error.HTTPError as error:
-                  body = error.read().decode('utf-8', errors='replace')
-                  raise RuntimeError(f'WordPress HTTP {error.code}: {body}') from error
-
-          def find_slug(slug: str):
-              query = urllib.parse.urlencode({
-                  'slug': slug,
-                  'context': 'edit',
-                  'per_page': 100,
-              })
-              return request_json('GET', f'/wp-json/wp/v2/posts?{query}')
+          def request_with_retry(method, endpoint, *, query=None):
+              errors = []
+              for attempt in range(1, 7):
+                  try:
+                      return client.request(method, endpoint, query=query)
+                  except RuntimeError as error:
+                      errors.append(str(error))
+                      if attempt == 6:
+                          raise RuntimeError(json.dumps({
+                              'request': f'{method} {endpoint}',
+                              'attempts': attempt,
+                              'errors': errors,
+                          }, ensure_ascii=False)) from error
+                      time.sleep(min(5 * attempt, 30))
+              raise AssertionError('unreachable')
 
           manifest_path = Path('wordpress/ja/2026-08-01/wordpress.yml')
           manifest = load_manifest(manifest_path)
@@ -92,17 +85,30 @@ jobs:
           retained_slugs = []
           for filename in manifest['posts']:
               meta, _ = parse_markdown_file(content_dir / filename)
-              retained_slugs.append(meta['slug'])
+              retained_slugs.append(str(meta['slug']))
 
           if len(retained_slugs) != 30 or len(set(retained_slugs)) != 30:
               raise RuntimeError(f'expected 30 unique retained slugs, found {len(retained_slugs)}')
           if target_slug in retained_slugs:
               raise RuntimeError('retired slug remains in publication manifest')
 
-          matches = find_slug(target_slug)
+          matches = request_with_retry(
+              'GET',
+              'posts',
+              query={
+                  'slug': target_slug,
+                  'status': 'any',
+                  'context': 'edit',
+                  'per_page': 100,
+              },
+          )
           deleted = []
           for post in matches:
-              result = request_json('DELETE', f"/wp-json/wp/v2/posts/{post['id']}?force=true")
+              result = request_with_retry(
+                  'DELETE',
+                  f"posts/{post['id']}",
+                  query={'force': 'true'},
+              )
               if not result.get('deleted'):
                   raise RuntimeError(f"WordPress did not permanently delete post {post['id']}")
               previous = result.get('previous', {})
@@ -112,29 +118,63 @@ jobs:
                   'link': previous.get('link', post.get('link')),
               })
 
-          if find_slug(target_slug):
+          remaining_target = request_with_retry(
+              'GET',
+              'posts',
+              query={
+                  'slug': target_slug,
+                  'status': 'any',
+                  'context': 'edit',
+                  'per_page': 100,
+              },
+          )
+          if remaining_target:
               raise RuntimeError('retired WordPress slug still exists after deletion')
 
-          missing = []
-          non_public = []
-          for slug in retained_slugs:
-              posts = find_slug(slug)
-              if not posts:
-                  missing.append(slug)
-                  continue
-              if not any(post.get('status') == 'publish' for post in posts):
-                  non_public.append(slug)
+          published = request_with_retry(
+              'GET',
+              'posts',
+              query={
+                  'status': 'publish',
+                  'context': 'edit',
+                  'per_page': 100,
+                  'after': '2026-08-01T05:59:59',
+                  'before': '2026-08-01T06:00:01',
+                  'orderby': 'date',
+                  'order': 'asc',
+              },
+          )
+          published_slugs = {str(post.get('slug')) for post in published}
+          missing = sorted(set(retained_slugs) - published_slugs)
 
-          if missing or non_public:
+          # Fall back to exact lookups only for any slug not returned by the date window.
+          still_missing = []
+          for slug in missing:
+              posts = request_with_retry(
+                  'GET',
+                  'posts',
+                  query={
+                      'slug': slug,
+                      'status': 'publish',
+                      'context': 'edit',
+                      'per_page': 1,
+                  },
+              )
+              if not posts:
+                  still_missing.append(slug)
+
+          if still_missing:
               raise RuntimeError(json.dumps({
-                  'missing_retained_slugs': missing,
-                  'non_public_retained_slugs': non_public,
+                  'missing_retained_slugs': still_missing,
               }, ensure_ascii=False))
+          if target_slug in published_slugs:
+              raise RuntimeError('retired slug remains in published date window')
 
           print(json.dumps({
               'target_slug': target_slug,
               'deleted_count': len(deleted),
               'deleted': deleted,
               'retained_published_posts': len(retained_slugs),
+              'bulk_verified_posts': len(published_slugs & set(retained_slugs)),
           }, ensure_ascii=False, indent=2))
           PY
