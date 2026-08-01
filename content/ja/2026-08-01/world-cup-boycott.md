@@ -25,10 +25,6 @@ sources:
     url: "https://www.reuters.com/sports/soccer/asia-confederation-backs-uefa-concacaf-opposition-fifa-world-cup-sale-plan-2026-07-31/"
 ---
 
-# UEFA加盟協会、FIFA大会ボイコットを警告　W杯権益売却案に反発
-
-> UEFAの55協会が、FIFAの大会運営会社への外部出資案に反対し、撤回されなければ大会参加を拒む構えを示した。
-
 UEFAと加盟55協会は7月30日、FIFAが大会運営子会社の株式を民間投資家に売却する構想を進める場合、FIFA主催大会をボイコットすると全会一致で決めた。
 
 争点は、ワールドカップなどを管理する商業組織「FIFA Forward Enterprise」への外部資本導入だ。UEFA側は、W杯を民営化可能な投資商品として扱うべきではないと主張する。
