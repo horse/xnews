@@ -27,17 +27,19 @@ The command validates the manifest, required Markdown fields, file presence and 
 
 ## Local publish
 
-Set credentials only in environment variables. Never commit an application password.
+Set credentials only in environment variables. Never commit or paste an application password into public logs or repository files.
 
 ```bash
-export WP_SITE_URL='https://example.jp'
-export WP_USERNAME='wordpress-user'
+export WP_SITE_URL='https://tankiji.com'
+export WP_USERNAME='wordpress-login-name'
 export WP_APPLICATION_PASSWORD='xxxx xxxx xxxx xxxx xxxx xxxx'
 
-python tools/wordpress_publish.py \
+python tools/wordpress_publish_safe.py \
   wordpress/ja/2026-08-01/wordpress.yml \
   --publish
 ```
+
+WordPress displays Application Passwords in groups separated by spaces. The safe launcher removes spaces, tabs and line breaks automatically before authentication, so either grouped or ungrouped input works.
 
 Optional explicit author mapping:
 
@@ -49,9 +51,9 @@ export WP_AUTHOR_ID='12'
 
 For remote publication, add these repository secrets under **Settings → Secrets and variables → Actions**:
 
-- `WP_SITE_URL`
-- `WP_USERNAME`
-- `WP_APPLICATION_PASSWORD`
+- `WP_SITE_URL` with value `https://tankiji.com`
+- `WP_USERNAME` with the actual WordPress login username
+- `WP_APPLICATION_PASSWORD` with a newly generated Application Password
 - `WP_AUTHOR_ID` only when an explicit numeric author ID is required
 
 The workflow `.github/workflows/publish-wordpress-ja.yml` runs only when manually dispatched or when the `wordpress-publish` branch is pushed. Do not create or update that branch until the secrets are configured.
@@ -63,4 +65,4 @@ The publisher creates missing categories and tags, converts Markdown to HTML, pu
 - WordPress REST API must be reachable at `/wp-json/wp/v2/`.
 - Application Passwords must be enabled.
 - The authenticated account must be allowed to publish posts and create categories and tags.
-- HTTPS is strongly recommended.
+- HTTPS is required for production use.
