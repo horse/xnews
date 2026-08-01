@@ -35,11 +35,11 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Validate edition
-        run: python tools/wordpress_publish.py wordpress/ja/2026-08-01/wordpress.yml
+        run: python tools/wordpress_publish.py wordpress/ja/2026-08-02/wordpress.yml
 
       - name: Publish to WordPress
         env:
           WP_SITE_URL: https://tankiji.com
           WP_USERNAME: horse
           WP_APPLICATION_PASSWORD: ${{ secrets.TANKIJI }}
-        run: python tools/wordpress_publish_safe.py wordpress/ja/2026-08-01/wordpress.yml --publish
+        run: python tools/wordpress_publish_safe.py wordpress/ja/2026-08-02/wordpress.yml --publish
