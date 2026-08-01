@@ -1,5 +1,5 @@
 (() => {
-const D=window.XNEWS_META, S=D.site, A=window.XNEWS_ARTICLES||[], B=D.briefs;
+const D=window.XNEWS_META, S=D.site, A=window.XNEWS_ARTICLES||[];
 const bySlug=Object.fromEntries(A.map(a=>[a.slug,a]));
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const nav=`<nav class="nav wrap"><a href="${S.base}/">首页</a><a href="${S.base}/2026/08/01/">8月1日日报</a><a href="${S.base}/categories.html">分类</a><a href="${S.base}/tags.html">标签</a><a href="${S.base}/about.html">关于</a></nav>`;
@@ -25,13 +25,13 @@ function renderHome(){
  <section class="home-lead"><div class="kicker">${esc(S.date)} · 昨日新闻</div><div class="lead-layout"><div>
  <h1><a href="${articleURL(lead)}">${esc(lead.title)}</a></h1><p class="lead">${esc(lead.summary)}</p>
  <div class="home-meta">${lead.categories.map(esc).join(" / ")} · ${esc(S.date)}</div></div>
- <div class="lead-side"><h2>本期日报</h2><p>${A.length}篇独立报道与${B.length}条简讯，覆盖金融、科技、影视、游戏、体育、消费与网络文化。</p>
+ <div class="lead-side"><h2>本期日报</h2><p>${A.length}篇独立报道，覆盖金融、科技、影视、游戏、体育、消费与网络文化。</p>
  <a class="button-link" href="${S.base}/2026/08/01/">阅读完整日报</a></div></div></section>
  <section class="homepage-section"><h2 class="section-title">焦点报道</h2><div class="feature-grid">${focus.slice(1,5).map(a=>card(a)).join("")}</div></section>
  <section class="homepage-section"><h2 class="section-title">最新报道</h2><div class="card-grid">${focus.slice(5).concat(standard.slice(0,5)).map(a=>card(a,true)).join("")}</div></section>
  ${groups.map(([t,slugs])=>section(t,slugs.map(s=>bySlug[s]))).join("")}
  <section class="homepage-section"><h2 class="section-title">更多内容</h2><div class="link-panels">
- <a href="${S.base}/2026/08/01/">8月1日完整日报</a><a href="${S.base}/2026/08/01/briefs.html">趋势简讯</a>
+ <a href="${S.base}/2026/08/01/">8月1日完整日报</a>
  <a href="${S.base}/categories.html">新闻分类</a><a href="${S.base}/tags.html">新闻标签</a></div></section>
  </main>`+footer;
 }
@@ -39,12 +39,10 @@ function renderEdition(){
  const focus=A.filter(a=>a.level==="focus"), standard=A.filter(a=>a.level==="standard");
  const cats=[...new Set(A.flatMap(a=>a.categories))].sort((a,b)=>a.localeCompare(b,"zh-CN"));
  app.innerHTML=header+nav+`<main class="wrap"><section class="hero edition-hero"><div class="kicker">每日新闻归档</div>
- <h1>${esc(S.date)} 日本X热门新闻日报</h1><p class="lead">7月31日的日本X热点从白天的汇率与企业消息，转向晚间的电视、电影、游戏和职业棒球，零点后又由角色生日、偶像与网络文化接续。以下日报将能够核实的事件整理为独立新闻，并把较分散的话题集中列入简讯。</p>
- <div class="edition-stats"><span>${A.length}篇报道</span><span>${focus.length}篇焦点</span><span>${standard.length}篇其他新闻</span><span>${B.length}条简讯</span></div></section>
+ <h1>${esc(S.date)} 日本X热门新闻日报</h1><p class="lead">7月31日的日本X热点从白天的汇率与企业消息，转向晚间的电视、电影、游戏和职业棒球，零点后又由角色生日、偶像与网络文化接续。以下日报将能够核实的事件整理为独立新闻。</p>
+ <div class="edition-stats"><span>${A.length}篇报道</span><span>${focus.length}篇焦点</span><span>${standard.length}篇其他新闻</span></div></section>
  <div class="edition-layout"><section><h2 class="section-title">焦点报道</h2>${focus.map(a=>card(a)).join("")}
- <h2 class="section-title">更多新闻</h2><div class="card-grid">${standard.map(a=>card(a,true)).join("")}</div>
- <h2 class="section-title">趋势简讯</h2><article class="story"><h2><a href="${S.base}/2026/08/01/briefs.html">${B.length}条趋势简讯</a></h2>
- <p>汇集当天受到关注、但适合以短篇形式记录的作品、人名、活动和社群话题。</p></article></section>
+ <h2 class="section-title">更多新闻</h2><div class="card-grid">${standard.map(a=>card(a,true)).join("")}</div></section>
  <aside class="side sticky-side"><h3>本期分类</h3><ul class="plain-list">${cats.map(c=>`<li><a href="${S.base}/categories.html#${catSlug(c)}">${esc(c)}</a></li>`).join("")}</ul>
  <h3>日期</h3><p class="meta">${esc(S.date)}</p><h3>归档</h3><p class="meta"><a href="${S.base}/categories.html">按分类浏览</a><br><a href="${S.base}/tags.html">按标签浏览</a></p></aside></div></main>`+footer;
 }
@@ -61,12 +59,6 @@ function renderArticle(){
  <div class="source-note"><strong>来源：</strong>${a.sources.map(([n,u])=>`<a href="${esc(u)}">${esc(n)}</a>`).join(" · ")}</div>
  <section class="post-taxonomy"><div><strong>分类</strong><span>${catLinks(a)}</span></div><div><strong>标签</strong><div class="tag-list">${tagLinks(a)}</div></div></section>
  <a class="back" href="${S.base}/2026/08/01/">← 返回当日新闻</a></main>`+footer;
-}
-function renderBriefs(){
- app.innerHTML=header+nav+`<main class="wrap"><section class="hero"><div class="kicker">趋势简讯</div><h1>${esc(S.date)} 简讯</h1>
- <p class="lead">以下内容记录当天集中出现的人物、作品、活动与社群话题。</p></section>
- <section class="brief-list">${B.map(b=>`<article class="brief"><h2>${esc(b.title)}</h2><p>${esc(b.text)}</p></article>`).join("")}</section>
- <a class="back" href="${S.base}/2026/08/01/">← 返回当日日报</a></main>`+footer;
 }
 function renderCategories(){
  const map={};A.forEach(a=>a.categories.forEach(c=>(map[c]??=[]).push(a)));
@@ -87,5 +79,5 @@ function renderTags(){
  </main>`+footer;
 }
 const page=document.body.dataset.page;
-({home:renderHome,edition:renderEdition,article:renderArticle,briefs:renderBriefs,categories:renderCategories,tags:renderTags}[page]||renderHome)();
+({home:renderHome,edition:renderEdition,article:renderArticle,categories:renderCategories,tags:renderTags}[page]||renderHome)();
 })();
