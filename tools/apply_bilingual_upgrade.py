@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import io
 import json
 import re
@@ -42,23 +43,19 @@ def validate() -> None:
     for index in range(1, 6):
         zh.extend(parse_js(ROOT / f"assets/data-{index}.js", "XNEWS_ARTICLES"))
         ja.extend(parse_js(ROOT / f"assets/ja-data-{index}.js", "XNEWS_JA_ARTICLES"))
-
     if len(zh) != 29 or len(ja) != 29:
         raise RuntimeError(f"article count mismatch: zh={len(zh)}, ja={len(ja)}")
-
     zh_slugs = [item["slug"] for item in zh]
     ja_slugs = [item["slug"] for item in ja]
     if len(set(zh_slugs)) != 29 or len(set(ja_slugs)) != 29:
         raise RuntimeError("duplicate slug")
     if set(zh_slugs) != set(ja_slugs):
         raise RuntimeError("bilingual slug mismatch")
-
     for item in zh:
         if len(item.get("summary", "")) < 70:
             raise RuntimeError(f"Chinese summary too short: {item['slug']}")
         if len(item.get("body", [])) < 4:
             raise RuntimeError(f"Chinese body too short: {item['slug']}")
-
     for item in ja:
         summary = item.get("summary", "")
         body = item.get("body", [])
@@ -71,7 +68,6 @@ def validate() -> None:
         else:
             if len(body) < 4 or body_chars < 350:
                 raise RuntimeError(f"Japanese standard article too short: {item['slug']}")
-
     content_dir = ROOT / "content/ja/2026-08-01"
     article_files = sorted(path for path in content_dir.glob("*.md") if path.name not in {"index.md", "briefs.md"})
     if len(article_files) != 29:
@@ -86,11 +82,9 @@ def validate() -> None:
             raise RuntimeError(f"publish time mismatch: {path}")
         if "excerpt:" not in text or "## 出典" not in text:
             raise RuntimeError(f"missing excerpt or sources: {path}")
-
     index = (content_dir / "index.md").read_text(encoding="utf-8")
     if index.count("./") < 30:
         raise RuntimeError("daily index links incomplete")
-
     print(json.dumps({
         "validated": 29,
         "chinese_summary_min": min(len(item["summary"]) for item in zh),
@@ -103,10 +97,15 @@ def main() -> int:
     parts = sorted(PARTS_DIR.glob("part-*.txt"))
     if len(parts) != 6:
         raise RuntimeError(f"expected 6 archive parts, found {len(parts)}")
-    encoded = "".join(path.read_text(encoding="ascii").strip() for path in parts)
+    values = []
+    for path in parts:
+        value = path.read_text(encoding="ascii").strip()
+        values.append(value)
+        print(f"PART {path.name} length={len(value)} sha256={hashlib.sha256(value.encode()).hexdigest()}")
+    encoded = "".join(values)
+    print(f"TOTAL length={len(encoded)}")
     safe_extract(base64.b64decode(encoded, validate=True))
     validate()
-
     shutil.rmtree(PARTS_DIR)
     SCRIPT.unlink(missing_ok=True)
     WORKFLOW.unlink(missing_ok=True)
