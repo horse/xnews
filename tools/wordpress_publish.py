@@ -186,7 +186,12 @@ def load_manifest(path: Path) -> dict[str, Any]:
             raise ValueError(f"{path}: missing manifest field {key}")
     if not isinstance(manifest["posts"], list) or not manifest["posts"]:
         raise ValueError(f"{path}: posts must be a non-empty list")
-    wordpress_dates(str(manifest["publish_at"]))
+    publish_at = manifest["publish_at"]
+    if isinstance(publish_at, datetime):
+        manifest["publish_at"] = publish_at.isoformat(timespec="seconds")
+    else:
+        manifest["publish_at"] = str(publish_at)
+    wordpress_dates(manifest["publish_at"])
     return manifest
 
 
