@@ -54,6 +54,11 @@ def wordpress_dates(publish_at: str) -> tuple[str, str]:
     return local, gmt
 
 
+def normalize_application_password(value: str) -> str:
+    """Remove display whitespace from a WordPress application password."""
+    return "".join(value.split())
+
+
 def rewrite_internal_markdown_links(body: str, published_links: dict[str, str]) -> str:
     pattern = re.compile(r"\(\./([A-Za-z0-9_-]+)\.md\)")
 
@@ -111,6 +116,9 @@ class WordpressClient:
 
     def __post_init__(self) -> None:
         self.site_url = self.site_url.rstrip("/")
+        self.application_password = normalize_application_password(
+            self.application_password
+        )
         token = base64.b64encode(
             f"{self.username}:{self.application_password}".encode("utf-8")
         ).decode("ascii")
@@ -234,7 +242,9 @@ def publish(manifest_path: Path, *, dry_run: bool) -> int:
 
     site_url = os.environ.get("WP_SITE_URL", "").strip()
     username = os.environ.get("WP_USERNAME", "").strip()
-    password = os.environ.get("WP_APPLICATION_PASSWORD", "").strip()
+    password = normalize_application_password(
+        os.environ.get("WP_APPLICATION_PASSWORD", "")
+    )
     if not site_url or not username or not password:
         raise RuntimeError(
             "WP_SITE_URL, WP_USERNAME and WP_APPLICATION_PASSWORD are required"
