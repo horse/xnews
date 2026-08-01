@@ -1,7 +1,6 @@
-name: Publish Japanese WordPress edition
+name: Delete retired WordPress brief
 
 on:
-  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -16,8 +15,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
-    if: github.event_name != 'pull_request' || github.head_ref == 'wordpress-publish'
+  delete:
+    if: github.head_ref == 'wordpress-publish'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -34,12 +33,108 @@ jobs:
       - name: Run publisher tests
         run: python -m unittest discover -s tests -v
 
-      - name: Validate edition
+      - name: Validate retained edition
         run: python tools/wordpress_publish.py wordpress/ja/2026-08-01/wordpress.yml
 
-      - name: Publish to WordPress
+      - name: Delete retired post and verify retained posts
         env:
           WP_SITE_URL: https://tankiji.com
           WP_USERNAME: horse
           WP_APPLICATION_PASSWORD: ${{ secrets.TANKIJI }}
-        run: python tools/wordpress_publish_safe.py wordpress/ja/2026-08-01/wordpress.yml --publish
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import json
+          import os
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          from tools.wordpress_publish import load_manifest, parse_markdown_file
+
+          site = os.environ['WP_SITE_URL'].rstrip('/')
+          username = os.environ['WP_USERNAME']
+          password = ''.join(os.environ['WP_APPLICATION_PASSWORD'].split())
+          authorization = 'Basic ' + base64.b64encode(f'{username}:{password}'.encode()).decode()
+          target_slug = '2026-08-01-briefs'
+
+          def request_json(method: str, path: str):
+              request = urllib.request.Request(
+                  site + path,
+                  method=method,
+                  headers={
+                      'Authorization': authorization,
+                      'Accept': 'application/json',
+                      'User-Agent': 'XNEWS-WordPress-Maintenance/1.0',
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=60) as response:
+                      return json.loads(response.read().decode('utf-8'))
+              except urllib.error.HTTPError as error:
+                  body = error.read().decode('utf-8', errors='replace')
+                  raise RuntimeError(f'WordPress HTTP {error.code}: {body}') from error
+
+          def find_slug(slug: str):
+              query = urllib.parse.urlencode({
+                  'slug': slug,
+                  'context': 'edit',
+                  'per_page': 100,
+              })
+              return request_json('GET', f'/wp-json/wp/v2/posts?{query}')
+
+          manifest_path = Path('wordpress/ja/2026-08-01/wordpress.yml')
+          manifest = load_manifest(manifest_path)
+          content_dir = Path(manifest['content_dir'])
+          retained_slugs = []
+          for filename in manifest['posts']:
+              meta, _ = parse_markdown_file(content_dir / filename)
+              retained_slugs.append(meta['slug'])
+
+          if len(retained_slugs) != 30 or len(set(retained_slugs)) != 30:
+              raise RuntimeError(f'expected 30 unique retained slugs, found {len(retained_slugs)}')
+          if target_slug in retained_slugs:
+              raise RuntimeError('retired slug remains in publication manifest')
+
+          matches = find_slug(target_slug)
+          deleted = []
+          for post in matches:
+              result = request_json('DELETE', f"/wp-json/wp/v2/posts/{post['id']}?force=true")
+              if not result.get('deleted'):
+                  raise RuntimeError(f"WordPress did not permanently delete post {post['id']}")
+              previous = result.get('previous', {})
+              deleted.append({
+                  'id': post['id'],
+                  'slug': previous.get('slug', target_slug),
+                  'link': previous.get('link', post.get('link')),
+              })
+
+          if find_slug(target_slug):
+              raise RuntimeError('retired WordPress slug still exists after deletion')
+
+          missing = []
+          non_public = []
+          for slug in retained_slugs:
+              posts = find_slug(slug)
+              if not posts:
+                  missing.append(slug)
+                  continue
+              if not any(post.get('status') == 'publish' for post in posts):
+                  non_public.append(slug)
+
+          if missing or non_public:
+              raise RuntimeError(json.dumps({
+                  'missing_retained_slugs': missing,
+                  'non_public_retained_slugs': non_public,
+              }, ensure_ascii=False))
+
+          print(json.dumps({
+              'target_slug': target_slug,
+              'deleted_count': len(deleted),
+              'deleted': deleted,
+              'retained_published_posts': len(retained_slugs),
+          }, ensure_ascii=False, indent=2))
+          PY
