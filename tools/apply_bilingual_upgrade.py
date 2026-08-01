@@ -17,9 +17,9 @@ WORKFLOW = ROOT / ".github/workflows/apply-bilingual-upgrade.yml"
 SCRIPT = ROOT / "tools/apply_bilingual_upgrade.py"
 PART_NAMES = ["part-04.txt", "part-05.txt", "part-06.txt"]
 EXPECTED_HASHES = {
-    "part-04.txt": "cb1d5b8182c5ee17b35efe2f58fed889698f2cf754289944db5bd0b9dc267288",
-    "part-05.txt": "249134a8e7f09ed2ae163c56895a13d1698dd9ead986c9530934cab41a03df8d",
-    "part-06.txt": "7297b1c8d313ba9294e50c1420d23d7ab2d8e76ab114f65a29ab205cfcc25940",
+    "part-04.txt": "cefeea8af15711e36ee1ec4587b68955322bd517acd649240d4bb3f6de203a68",
+    "part-05.txt": "2f9ef82af6168ed8429411ce874500e34b9816b9728b4b4bc0b7d59de2b27d0b",
+    "part-06.txt": "6589fe0f11cb99a275089de8f1beb72cec6cdc723c424b044f8af1c85f95d86d",
 }
 
 
