@@ -25,7 +25,7 @@ python tools/wordpress_publish.py wordpress/ja/2026-08-01/wordpress.yml
 
 The command validates the manifest, required Markdown fields, file presence and duplicate slugs. It prints the publication plan without contacting WordPress.
 
-## Publish
+## Local publish
 
 Set credentials only in environment variables. Never commit an application password.
 
@@ -44,6 +44,17 @@ Optional explicit author mapping:
 ```bash
 export WP_AUTHOR_ID='12'
 ```
+
+## GitHub Actions publish
+
+For remote publication, add these repository secrets under **Settings → Secrets and variables → Actions**:
+
+- `WP_SITE_URL`
+- `WP_USERNAME`
+- `WP_APPLICATION_PASSWORD`
+- `WP_AUTHOR_ID` only when an explicit numeric author ID is required
+
+The workflow `.github/workflows/publish-wordpress-ja.yml` runs only when manually dispatched or when the `wordpress-publish` branch is pushed. Do not create or update that branch until the secrets are configured.
 
 The publisher creates missing categories and tags, converts Markdown to HTML, publishes or updates posts by slug, and rewrites links in the daily index from local `.md` paths to the WordPress post URLs returned by the API.
 
