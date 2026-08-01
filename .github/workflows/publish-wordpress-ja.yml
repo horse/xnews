@@ -2,6 +2,11 @@ name: Publish Japanese WordPress edition
 
 on:
   workflow_dispatch:
+    inputs:
+      edition_date:
+        description: "Edition date in YYYY-MM-DD; leave blank to publish the latest manifest"
+        required: false
+        type: string
   pull_request:
     branches:
       - main
@@ -34,12 +39,27 @@ jobs:
       - name: Run publisher tests
         run: python -m unittest discover -s tests -v
 
+      - name: Select edition manifest
+        id: manifest
+        shell: bash
+        run: |
+          edition="${{ github.event.inputs.edition_date }}"
+          if [ -n "$edition" ]; then
+            manifest="wordpress/ja/${edition}/wordpress.yml"
+          else
+            manifest="$(find wordpress/ja -mindepth 2 -maxdepth 2 -name wordpress.yml | sort | tail -n 1)"
+          fi
+          test -n "$manifest"
+          test -f "$manifest"
+          echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "Publishing manifest: $manifest"
+
       - name: Validate edition
-        run: python tools/wordpress_publish.py wordpress/ja/2026-08-01/wordpress.yml
+        run: python tools/wordpress_publish.py "${{ steps.manifest.outputs.manifest }}"
 
       - name: Publish to WordPress
         env:
           WP_SITE_URL: https://tankiji.com
           WP_USERNAME: horse
           WP_APPLICATION_PASSWORD: ${{ secrets.TANKIJI }}
-        run: python tools/wordpress_publish_safe.py wordpress/ja/2026-08-01/wordpress.yml --publish
+        run: python tools/wordpress_publish_safe.py "${{ steps.manifest.outputs.manifest }}" --publish
