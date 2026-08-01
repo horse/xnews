@@ -101,8 +101,8 @@ def validate() -> None:
 
 def main() -> int:
     parts = sorted(PARTS_DIR.glob("part-*.txt"))
-    if len(parts) != 12:
-        raise RuntimeError(f"expected 12 archive parts, found {len(parts)}")
+    if len(parts) != 6:
+        raise RuntimeError(f"expected 6 archive parts, found {len(parts)}")
     encoded = "".join(path.read_text(encoding="ascii").strip() for path in parts)
     safe_extract(base64.b64decode(encoded, validate=True))
     validate()
