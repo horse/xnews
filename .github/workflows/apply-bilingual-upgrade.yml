@@ -1,9 +1,9 @@
 name: Apply bilingual length upgrade
 
 on:
-  push:
+  pull_request:
     branches:
-      - bilingual-length-upgrade
+      - main
     paths:
       - .upgrade/READY
 
@@ -12,9 +12,10 @@ permissions:
 
 jobs:
   apply:
+    if: github.head_ref == 'bilingual-length-upgrade'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check out upgrade branch
         uses: actions/checkout@v4
         with:
           ref: bilingual-length-upgrade
