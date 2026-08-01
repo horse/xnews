@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.wordpress_publish import (
     build_post_payload,
     load_manifest,
+    normalize_application_password,
     parse_markdown_file,
     rewrite_internal_markdown_links,
     wordpress_dates,
@@ -37,6 +38,12 @@ class WordpressPublishTests(unittest.TestCase):
         local, gmt = wordpress_dates("2026-08-01T06:00:00+09:00")
         self.assertEqual(local, "2026-08-01T06:00:00")
         self.assertEqual(gmt, "2026-07-31T21:00:00")
+
+    def test_normalize_application_password_removes_all_whitespace(self):
+        self.assertEqual(
+            normalize_application_password("abcd efgh\nijkl\tmnop"),
+            "abcdefghijklmnop",
+        )
 
     def test_rewrite_internal_markdown_links_uses_published_links(self):
         body = "[記事](./yen-intervention.md) と [短報](./briefs.md)"
