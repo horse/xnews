@@ -2,14 +2,14 @@ name: Publish Japanese WordPress edition
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches:
-      - wordpress-publish
+      - main
     paths:
       - .github/wordpress-publish-trigger
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: wordpress-ja-publish
@@ -17,12 +17,11 @@ concurrency:
 
 jobs:
   publish:
+    if: github.event_name != 'pull_request' || github.head_ref == 'wordpress-publish'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,32 +38,8 @@ jobs:
         run: python tools/wordpress_publish.py wordpress/ja/2026-08-01/wordpress.yml
 
       - name: Publish to WordPress
-        id: publish
-        shell: bash
         env:
           WP_SITE_URL: https://tankiji.com
           WP_USERNAME: horse
           WP_APPLICATION_PASSWORD: ${{ secrets.TANKIJI }}
-        run: |
-          set +e
-          python tools/wordpress_publish_safe.py \
-            wordpress/ja/2026-08-01/wordpress.yml \
-            --publish 2>&1 | tee wordpress/ja/2026-08-01/publish-result.log
-          code=${PIPESTATUS[0]}
-          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          exit 0
-
-      - name: Commit publication result
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add wordpress/ja/2026-08-01/publish-result.log
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: record WordPress publication result"
-            git push origin HEAD:${{ github.ref_name }}
-          fi
-
-      - name: Fail when publication failed
-        if: steps.publish.outputs.exit_code != '0'
-        run: exit 1
+        run: python tools/wordpress_publish_safe.py wordpress/ja/2026-08-01/wordpress.yml --publish
