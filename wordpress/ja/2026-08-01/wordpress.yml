@@ -1,0 +1,41 @@
+version: 1
+locale: ja
+timezone: Asia/Tokyo
+content_dir: content/ja/2026-08-01
+publish_at: 2026-08-01T06:00:00+09:00
+status: publish
+comment_status: closed
+ping_status: closed
+author: authenticated_user
+posts:
+  - yen-intervention.md
+  - kioxia.md
+  - spider-man.md
+  - sore-snowman.md
+  - genshin.md
+  - ushijima.md
+  - chika.md
+  - kuramoto.md
+  - tif2026.md
+  - baseball.md
+  - tshirt-drama.md
+  - timelessman.md
+  - monthly-art.md
+  - mcdonalds-pokemon.md
+  - idolish7-simeji.md
+  - kurasushi-crab.md
+  - pokemon-masters.md
+  - ghana-ice.md
+  - line-manga-gacha.md
+  - lohaco-water.md
+  - miko-8th.md
+  - jurassic-world.md
+  - takai-rika.md
+  - premium-friday.md
+  - commemorative-days.md
+  - world-cup-boycott.md
+  - mie-survey.md
+  - tokai-kisen.md
+  - roirom-honda.md
+  - briefs.md
+  - index.md
