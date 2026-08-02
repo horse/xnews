@@ -1,0 +1,60 @@
+name: Finalize August 2 Japanese edition
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [rebuild-aug2-31]
+    paths:
+      - ".github/workflows/finalize-aug2-ja.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild-aug2-31
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run approved localization and copy cleanup
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, textwrap
+
+          workflow = Path('.github/workflows/audit-aug2-ja-final.yml').read_text(encoding='utf-8')
+          match = re.search(r"python - <<'PY'\n(.*?)\n\s+PY", workflow, re.S)
+          if not match:
+              raise SystemExit('Cannot extract finalization script')
+          exec(compile(textwrap.dedent(match.group(1)), '<finalize-ja>', 'exec'))
+
+          index = Path('content/ja/2026-08-02/index.md')
+          text = index.read_text(encoding='utf-8').replace('31本のニュース', '31件のニュース').replace('31本を収録', '31件を収録')
+          index.write_text(text, encoding='utf-8')
+          PY
+      - name: Verify final bilingual edition
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -m unittest tests/test_daily_edition_integrity.py -v
+          node --check assets/site.js
+          test "$(find 2026/08/02/reports -maxdepth 1 -name '*.html' | wc -l)" -eq 31
+          test "$(find content/ja/2026-08-02 -maxdepth 1 -name '*.md' ! -name index.md | wc -l)" -eq 31
+      - name: Commit and remove one-shot workflows
+        run: |
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -name '*.pyc' -delete
+          rm -f .github/workflows/localize-aug2-ja-metadata.yml
+          rm -f .github/workflows/audit-aug2-ja-final.yml
+          rm -f .github/workflows/finalize-aug2-ja.yml
+          git config user.name "xnews-build-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Finalize August 2 Japanese edition"
+          git push origin HEAD:rebuild-aug2-31
