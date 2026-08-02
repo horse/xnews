@@ -1,0 +1,48 @@
+name: Verify final August 2 edition
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [rebuild-aug2-31]
+    paths:
+      - ".github/workflows/verify-aug2-final.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild-aug2-31
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify content, layout, and publication inputs
+        run: |
+          python -m unittest tests/test_daily_edition_integrity.py -v
+          node --check assets/site.js
+          test "$(find 2026/08/02/reports -maxdepth 1 -name '*.html' | wc -l)" -eq 31
+          test "$(find content/ja/2026-08-02 -maxdepth 1 -name '*.md' ! -name index.md | wc -l)" -eq 31
+          test "$(grep -c '^  - file:' wordpress/ja/2026-08-02/wordpress.yml)" -eq 32
+          test ! -d .build
+          test ! -e .github/workflows/localize-aug2-ja-metadata.yml
+          test ! -e .github/workflows/audit-aug2-ja-final.yml
+          test ! -e .github/workflows/finalize-aug2-ja.yml
+          ! grep -R -nE '候选|公开稿|报道角度|本稿は|記事では|ニュース価値|官方|幕张展览馆|富士电视台|鬼灭之刃|超级机器人大战|高额疗养费|外汇干预' content/ja/2026-08-02 assets/data-6.js
+      - name: Remove verification workflow and caches
+        run: |
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -name '*.pyc' -delete
+          rm -f .github/workflows/verify-aug2-final.yml
+          git config user.name "xnews-build-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Verify final August 2 edition"
+          git push origin HEAD:rebuild-aug2-31
