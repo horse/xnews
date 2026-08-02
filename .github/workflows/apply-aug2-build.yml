@@ -1,6 +1,8 @@
 name: Apply August 2 rebuild
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [rebuild-aug2-31]
     paths:
