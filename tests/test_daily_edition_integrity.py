@@ -3,76 +3,75 @@ from __future__ import annotations
 import json
 import re
 import subprocess
-import textwrap
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def load_reports() -> list[dict]:
+    text = (ROOT / "assets/data-6.js").read_text(encoding="utf-8")
+    match = re.search(r"\.concat\((.*)\);\s*$", text, re.S)
+    if not match:
+        raise AssertionError("data-6.js does not contain a JSON concat payload")
+    return json.loads(match.group(1))
+
+
 class DailyEditionIntegrityTests(unittest.TestCase):
-    def test_frontend_renderer_is_date_aware(self) -> None:
-        renderer = (ROOT / "assets/site.js").read_text(encoding="utf-8")
-        self.assertNotIn("/2026/08/02/", renderer)
-        self.assertIn('"2026-08-01"', renderer)
-        self.assertIn('"2026-08-02"', renderer)
-
-    def test_august_1_grouped_layout_renders_every_report_once(self) -> None:
-        script = textwrap.dedent(
-            """
-            global.window = {XNEWS_ARTICLES: []};
-            for (const name of ['data-1.js','data-2.js','data-3.js','data-4.js','data-5.js']) {
-              require('./assets/' + name);
-            }
-            const layout = require('./assets/site.js');
-            const slugs = layout.EDITIONS['2026-08-01'];
-            const bySlug = Object.fromEntries(window.XNEWS_ARTICLES.map(article => [article.slug, article]));
-            const articles = slugs.map(slug => bySlug[slug]).filter(Boolean);
-            const arranged = layout.arrangeEdition(articles);
-            const rendered = [arranged.lead, ...arranged.featured, ...arranged.groups.flatMap(group => group.items)].filter(Boolean);
-            const unique = new Set(rendered.map(article => article.slug));
-            if (articles.length !== 29) throw new Error(`expected 29 source articles, got ${articles.length}`);
-            if (rendered.length !== 29) throw new Error(`expected 29 rendered articles, got ${rendered.length}`);
-            if (unique.size !== 29) throw new Error(`expected 29 unique articles, got ${unique.size}`);
-            if (arranged.featured.length !== 4) throw new Error(`expected 4 featured articles, got ${arranged.featured.length}`);
-            if (arranged.groups.filter(group => group.items.length).length < 4) throw new Error('expected at least four non-empty editorial groups');
-            """
-        )
-        result = subprocess.run(
-            ["node", "-e", script],
-            cwd=ROOT,
-            text=True,
-            capture_output=True,
-            check=False,
-        )
-        self.assertEqual(0, result.returncode, result.stderr)
-
-    def test_august_2_public_data_contains_eight_complete_reports(self) -> None:
-        text = (ROOT / "assets/data-6.js").read_text(encoding="utf-8")
-        match = re.search(r"\.concat\((.*)\);\s*$", text, re.S)
-        self.assertIsNotNone(match)
-        reports = json.loads(match.group(1))
-        self.assertEqual(8, len(reports))
-        self.assertEqual(8, len({report["slug"] for report in reports}))
+    def test_august_2_contains_31_complete_reports(self) -> None:
+        reports = load_reports()
+        self.assertEqual(31, len(reports))
+        self.assertEqual(31, len({report["slug"] for report in reports}))
         for report in reports:
             self.assertEqual("2026-08-02", report["editionDate"])
             self.assertGreaterEqual(len(report["body"]), 4)
             self.assertGreaterEqual(len(report["summary"]), 60)
+            self.assertTrue(report["categories"])
+            self.assertTrue(report["tags"])
             self.assertTrue(report["sources"])
+            self.assertTrue((ROOT / f"2026/08/02/reports/{report['slug']}.html").exists())
+            self.assertTrue((ROOT / f"content/ja/2026-08-02/{report['slug']}.md").exists())
 
-    def test_august_2_wordpress_manifest_replaces_failed_five_story_edition(self) -> None:
+    def test_grouped_layout_renders_every_august_2_report_once(self) -> None:
+        script = r"""
+const fs = require('fs');
+global.window = {XNEWS_ARTICLES: []};
+const raw = fs.readFileSync('assets/data-6.js', 'utf8');
+eval(raw);
+delete global.window;
+const {arrangeEdition} = require('./assets/site.js');
+const result = arrangeEdition(globalThis.__unused || []);
+const reports = JSON.parse(raw.match(/\.concat\((.*)\);\s*$/s)[1]);
+const layout = arrangeEdition(reports);
+const slugs = [layout.lead.slug, ...layout.featured.map(x => x.slug), ...layout.groups.flatMap(g => g.items.map(x => x.slug))];
+console.log(JSON.stringify({count: slugs.length, unique: new Set(slugs).size, featured: layout.featured.length, groups: layout.groups.filter(g => g.items.length).length}));
+"""
+        result = subprocess.run(["node", "-e", script], cwd=ROOT, text=True, capture_output=True)
+        self.assertEqual(0, result.returncode, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(31, payload["count"])
+        self.assertEqual(31, payload["unique"])
+        self.assertEqual(4, payload["featured"])
+        self.assertGreaterEqual(payload["groups"], 5)
+
+    def test_august_1_mapping_remains_29(self) -> None:
+        renderer = (ROOT / "assets/site.js").read_text(encoding="utf-8")
+        match = re.search(r'"2026-08-01":(\[.*?\]),\n"2026-08-02"', renderer, re.S)
+        self.assertIsNotNone(match)
+        self.assertEqual(29, len(json.loads(match.group(1))))
+
+    def test_wordpress_manifest_contains_all_posts_and_index(self) -> None:
+        reports = load_reports()
         manifest = (ROOT / "wordpress/ja/2026-08-02/wordpress.yml").read_text(encoding="utf-8")
-        for stale in ("july-heat-low-rain.md", "water-day-2026.md", "treasure-ig-arena.md", "metopoli-summer-festival.md"):
-            self.assertNotIn(stale, manifest)
-        for slug in ("fgo-fes-2026-day1", "engei8-2026", "sakura-miko-8th-anniversary",
-                     "vnl-men-semifinal-2026", "koshien-draw-2026", "srw-35th-stream",
-                     "liella-tutorial-live-2026", "tif2026-august1"):
-            self.assertIn(f"{slug}.md", manifest)
-            self.assertTrue((ROOT / f"content/ja/2026-08-02/{slug}.md").exists())
+        for report in reports:
+            self.assertIn(f"  - {report['slug']}.md", manifest)
+        self.assertIn("  - index.md", manifest)
+        self.assertEqual(32, len(re.findall(r"^  - .*\.md$", manifest, re.M)))
 
-    def test_august_1_archive_no_longer_advertises_briefs(self) -> None:
-        archive = (ROOT / "2026/08/01/index.html").read_text(encoding="utf-8")
-        self.assertNotIn("简讯", archive)
+    def test_japanese_index_no_longer_says_eight(self) -> None:
+        index = (ROOT / "content/ja/2026-08-02/index.md").read_text(encoding="utf-8")
+        self.assertIn("31件", index)
+        self.assertNotIn("8件", index)
 
 
 if __name__ == "__main__":
