@@ -1,0 +1,116 @@
+name: Localize August 2 Japanese metadata
+
+on:
+  push:
+    branches: [rebuild-aug2-31]
+    paths:
+      - ".github/workflows/localize-aug2-ja-metadata.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  localize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild-aug2-31
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Convert Chinese metadata labels to natural Japanese
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+
+          replacements = {
+              '浮所飞贵': '浮所飛貴', '那须雄登': '那須雄登', '作间龙斗': '作間龍斗',
+              '兔女郎日': 'バニー文化', '内裤日': '下着文化', '日语谐音': '日本語の語呂合わせ',
+              '横滨DeNA海湾之星': '横浜DeNAベイスターズ', '东京巨蛋': '東京ドーム', '职业棒球': 'プロ野球',
+              '六本木新城': '六本木ヒルズ', '千叶银杯': '千葉ダービー', '柏太阳神': '柏レイソル',
+              'JEF联市原千叶': 'ジェフユナイテッド市原・千葉', '地方德比': '地域ダービー',
+              '周六做什么': '土曜はナニする!?', '关西电视台': '関西テレビ', '周末生活': '週末情報',
+              '江户川区花火大会': '江戸川区花火大会', '篠崎公园': '篠崎公園', '音乐烟花': '音楽花火', '东京夏季': '東京の夏',
+              '富士电视台': 'フジテレビ', '爆笑红地毯': '爆笑レッドカーペット', '喜剧': 'お笑い',
+              '幕张展览馆': '幕張メッセ',
+              '高额疗养费': '高額療養費', '负担上限': '負担上限', '医疗保险': '医療保険', '患者负担': '患者負担', '厚生劳动省': '厚生労働省',
+              '荒野行动': '荒野行動', '鬼灭之刃': '鬼滅の刃', '无限城': '無限城', '联动': 'コラボ', '灶门祢豆子': '竈門禰豆子',
+              '告白－25年目的秘密－': '告白－25年目の秘密－', '第4话': '第4話',
+              '夏季甲子园': '夏の甲子園', '全国高中棒球锦标赛': '全国高等学校野球選手権大会', '线上抽签': 'オンライン抽選',
+              '49所代表校': '49代表校', '阪神甲子园球场': '阪神甲子園球場', '冲绳尚学': '沖縄尚学', '敦贺气比': '敦賀気比', '甲子园抽签': '甲子園抽選',
+              '避难所': '避難所', '灾区支援': '被災地支援', '自卫队': '自衛隊',
+              '千叶罗德海洋': '千葉ロッテマリーンズ', '球迷文化': 'ファン文化',
+              '魔法少女奈叶': '魔法少女リリカルなのは', '第5话': '第5話',
+              '洛杉矶道奇': 'ロサンゼルス・ドジャース', '波士顿红袜': 'ボストン・レッドソックス', '本垒打': '本塁打',
+              '温泉鲨': '温泉シャーク', '日本电影': '日本映画', '怪兽电影': '怪獣映画', '独立电影': 'インディペンデント映画',
+              '樱巫女': 'さくらみこ', '3D直播': '3D配信', '高地优吾': '髙地優吾', '田中树': '田中樹',
+              '超级机器人大战Y': 'スーパーロボット大戦Y', '超级机器人大战DD': 'スーパーロボット大戦DD', '超级机器人大战': 'スーパーロボット大戦',
+              '宝塚歌剧': '宝塚歌劇', '波族传奇': '萩尾望都作品', '宝塚大剧场': '宝塚大劇場',
+              '台场': 'お台場', '偶像': 'アイドル', '次世代艺人大奖赛': 'お笑いコンテスト', '新人喜剧演员': '若手芸人',
+              '奥特曼特奥': 'ウルトラマンテオ', '普奇': 'プッチー', '宇宙舱': '宇宙ポッド', '东京电视台': 'テレビ東京',
+              '日本男排': 'バレーボール男子日本代表', '高桥蓝': '髙橋藍', '五局比赛': 'フルセット',
+              '日元': '円', '外汇干预': '為替介入', '美国财政部': '米財務省', '纽约联储': 'ニューヨーク連銀', '汇率检查': 'レートチェック',
+              '世界杯': 'ワールドカップ', '商业权利': '商業権', '股权出售': '株式売却',
+              '巡演东京场信息': 'ツアー東京公演情報', 'DeNA 8月比赛日程': 'DeNA 8月試合日程',
+              'BMSG TRAINEE活动票务页': 'BMSG TRAINEE イベントチケット情報', 'BMSG官方新闻': 'BMSG 公式ニュース',
+              '千叶银杯赛事概要': 'ちばぎんカップ大会概要', '千叶银杯票务与直播': 'ちばぎんカップ チケット・配信情報',
+              '关西电视台节目官网': '関西テレビ 番組公式', '节目播出信息': '放送情報', '江户川区大会公告': '江戸川区 大会案内',
+              '富士电视台节目公告': 'フジテレビ 番組発表', 'ENGEI Grand Slam出演信息': 'ENGEIグランドスラム 出演情報',
+              'FGO Fes. 2026 官方网站': 'FGO Fes. 2026 公式サイト', 'FGO Fes. 2026 常见问题': 'FGO Fes. 2026 よくある質問',
+              'Reuters报道': 'Reuters', '《鬼灭之刃》官方公告': '「鬼滅の刃」公式発表', '《鬼灭之刃》官方门户': '「鬼滅の刃」公式ポータル',
+              'ORICON电视剧信息': 'ORICON NEWS ドラマ情報', '富士电视台节目网站': 'フジテレビ 番組公式',
+              '日本高中棒球联盟代表校信息': '日本高等学校野球連盟 代表校情報', '朝日新闻甲子园专题': '朝日新聞 甲子園特集',
+              '首相官邸记者会': '首相官邸 記者会見', '防卫省灾害应对信息': '防衛省 災害対応情報', '数字厅灾害信息': 'デジタル庁 災害情報',
+              '活动官方网站': 'イベント公式サイト', 'Love Live! Superstar!! 官方网站': 'Love Live! Superstar!! 公式サイト',
+              '动画官方网站': 'アニメ公式サイト', '官方播出信息': '公式放送情報', 'Reuters膝部不适报道': 'Reuters 膝の不調に関する報道',
+              '电影官方网站': '映画公式サイト', '樱巫女官方频道': 'さくらみこ公式チャンネル',
+              'SixTONES官方广播信息': 'SixTONES 公式ラジオ情報', '日本放送节目官网': 'ニッポン放送 番組公式',
+              '35周年纪念直播官方信息': '35周年記念配信 公式情報', '35周年官方网站': '35周年公式サイト',
+              '宝塚歌剧公演信息': '宝塚歌劇 公演情報', 'TIF 2026官方网站': 'TIF 2026 公式サイト', 'TIF 2026官方新闻': 'TIF 2026 公式ニュース',
+              '富士电视台节目页': 'フジテレビ 番組ページ', 'ENGEI 8官方公告': 'ENGEI 8 公式発表',
+              '东京电视台节目页': 'テレビ東京 番組ページ', 'NHK Venue101节目页': 'NHK Venue101 番組ページ', '出演阵容报道': '出演者情報',
+              '日本排球协会VNL大会页': '日本バレーボール協会 VNL大会ページ', '日本排球协会决赛轮名单': '日本バレーボール協会 ファイナルラウンド登録メンバー',
+              'Reuters日元干预报道': 'Reuters 円介入報道',
+          }
+
+          base = Path('content/ja/2026-08-02')
+          for path in base.glob('*.md'):
+              text = path.read_text(encoding='utf-8')
+              for old, new in replacements.items():
+                  text = text.replace(old, new)
+              path.write_text(text, encoding='utf-8')
+
+          forbidden = ['官方', '网站', '常见问题', '节目官网', '活动票务页', '官方新闻', '赛事概要', '票务与直播', '代表校信息', '灾害应对信息', '电影官方网站', '官方频道', '官方广播信息', '节目页', '出演阵容报道', '协会VNL', '协会决赛轮', '日元干预报道', '幕张展览馆', '富士电视台', '东京电视台', '鬼灭之刃', '超级机器人大战', '高额疗养费', '外汇干预']
+          remaining = {}
+          for path in base.glob('*.md'):
+              text = path.read_text(encoding='utf-8')
+              hits = [term for term in forbidden if term in text]
+              if hits:
+                  remaining[path.name] = hits
+          if remaining:
+              raise SystemExit(f'Chinese metadata remains: {remaining}')
+
+          for cache in Path('.').rglob('__pycache__'):
+              shutil.rmtree(cache)
+          for pyc in Path('.').rglob('*.pyc'):
+              pyc.unlink()
+          PY
+      - name: Verify localized edition without bytecode
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -m unittest tests/test_daily_edition_integrity.py -v
+          node --check assets/site.js
+      - name: Remove caches, commit, and remove workflow
+        run: |
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -name '*.pyc' -delete
+          rm -f .github/workflows/localize-aug2-ja-metadata.yml
+          git config user.name "xnews-build-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Localize August 2 Japanese metadata and sources"
+          git push origin HEAD:rebuild-aug2-31
