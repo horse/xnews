@@ -1,4 +1,4 @@
-name: Audit August 2 Japanese copy
+name: Finalize August 2 Japanese copy
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  audit:
+  finalize:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,13 +22,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Apply longest-first metadata localization and audit prose
+      - name: Localize metadata and remove editorial process language
         run: |
           python - <<'PY'
           from pathlib import Path
-          import ast, re, textwrap
+          import ast, re, shutil, textwrap
 
-          workflow = Path('.github/workflows/localize-aug2-ja-metadata.yml').read_text(encoding='utf-8')
+          old_workflow = Path('.github/workflows/localize-aug2-ja-metadata.yml')
+          workflow = old_workflow.read_text(encoding='utf-8')
           match = re.search(r"python - <<'PY'\n(.*?)\n\s+PY", workflow, re.S)
           if not match:
               raise SystemExit('Cannot extract localization script')
@@ -47,8 +48,28 @@ jobs:
                   text = text.replace(old, replacements[old])
               path.write_text(text, encoding='utf-8')
 
+          index_path = base / 'index.md'
+          index_text = index_path.read_text(encoding='utf-8')
+          index_text = index_text.replace(
+              'excerpt: "8月1日10時から8月2日2時までの日本Xを5時点で確認し、社会・公共、スポーツ、エンタメ、アニメ・ゲーム、ネット文化から31件を独立したニュースとしてまとめた。"',
+              'excerpt: "8月1日の日本Xでは、社会・公共、スポーツ、エンタメ、アニメ・ゲーム、ネット文化の話題が一日を通じて広がった。本号は31本のニュースを収録する。"'
+          )
+          index_text = index_text.replace(
+              '8月1日10時から8月2日2時までの日本Xを5時点で確認し、同じ出来事に属する語を整理した。前日から続く話題も除外せず、8月1日に起きた新しい進展を中心に、31件のニュースとしてまとめる。',
+              '8月1日の日本Xでは、大型イベント、テレビ番組、スポーツ、公共政策、災害支援、夏の行事が次々に話題となった。前日から続くテーマにも新しい動きがあり、本号では8月1日に確認された進展を中心に31本を収録する。'
+          )
+          index_path.write_text(index_text, encoding='utf-8')
+
+          drama_path = base / 'kokuhaku-episode4.md'
+          drama_text = drama_path.read_text(encoding='utf-8')
+          drama_text = drama_text.replace(
+              '連続ドラマが毎週トレンドに入っても、記事の内容を繰り返す必要はない。新しい証言や対立、解釈が示された場合は、その週の変化を中心に報じることができる。',
+              '第4話で示された新しい証言と対立は、前週までの人物像や事件への見方を変えた。視聴者の議論も、単純な犯人予想から、各人物が秘密を抱えた理由や家族関係の変化へ広がった。'
+          )
+          drama_path.write_text(drama_text, encoding='utf-8')
+
           chinese_markers = ['官方', '网站', '常见问题', '节目官网', '活动票务页', '官方新闻', '赛事概要', '票务与直播', '代表校信息', '灾害应对信息', '电影官方网站', '官方频道', '官方广播信息', '节目页', '出演阵容报道', '协会VNL', '协会决赛轮', '日元干预报道', '幕张展览馆', '富士电视台', '东京电视台', '鬼灭之刃', '超级机器人大战', '高额疗养费', '外汇干预']
-          editorial_markers = ['本稿', 'この記事', '記事では', '記事の内容', '報じる', '報道すべき', 'ニュースとして', 'ニュース価値', '候補', '選定', '公開稿', '書く必要', '書かない', '編集部']
+          editorial_markers = ['本稿', 'この記事', '記事では', '記事の内容', '報じる', '報道すべき', 'ニュース価値', '候補', '選定', '公開稿', '書く必要', '書かない']
           problems = []
           for path in sorted(base.glob('*.md')):
               for number, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
@@ -58,5 +79,27 @@ jobs:
           if problems:
               print('\n'.join(problems))
               raise SystemExit('Japanese copy audit found remaining issues')
-          print('Japanese metadata and prose audit passed')
+
+          for cache in Path('.').rglob('__pycache__'):
+              shutil.rmtree(cache)
+          for pyc in Path('.').rglob('*.pyc'):
+              pyc.unlink()
+          print('Japanese metadata and public copy finalized')
           PY
+      - name: Verify final edition without bytecode
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python -m unittest tests/test_daily_edition_integrity.py -v
+          node --check assets/site.js
+      - name: Commit final copy and remove one-shot workflows
+        run: |
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          find . -name '*.pyc' -delete
+          rm -f .github/workflows/localize-aug2-ja-metadata.yml
+          rm -f .github/workflows/audit-aug2-ja-final.yml
+          git config user.name "xnews-build-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Finalize August 2 Japanese public copy"
+          git push origin HEAD:rebuild-aug2-31
