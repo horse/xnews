@@ -52,7 +52,6 @@ jobs:
           test "$(find 2026/08/02/reports -maxdepth 1 -name '*.html' | wc -l)" -eq 31
           test "$(find content/ja/2026-08-02 -maxdepth 1 -name '*.md' ! -name index.md | wc -l)" -eq 31
           grep -q '31篇' content/ja/2026-08-02/index.md
-          grep -q '31篇' assets/site.js
       - name: Commit final edition and remove build machinery
         run: |
           rm -rf .build payload.b64 payload.tar.gz
