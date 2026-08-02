@@ -1,6 +1,8 @@
 name: Localize August 2 Japanese metadata
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [rebuild-aug2-31]
     paths:
