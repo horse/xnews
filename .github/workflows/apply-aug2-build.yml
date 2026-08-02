@@ -25,6 +25,8 @@ jobs:
           python-version: "3.12"
       - name: Reassemble and verify payload
         run: |
+          wc -c .build/aug2.part{00..07}
+          sha256sum .build/aug2.part{00..07}
           cat .build/aug2.part{00..07} > payload.b64
           echo "8536842a4e8586146147e5d8b512d8ce0d10f7ceecdc44fcab98eafe38e98321  payload.b64" | sha256sum -c -
           base64 -d payload.b64 > payload.tar.gz
