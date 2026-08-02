@@ -1,0 +1,62 @@
+name: Audit August 2 Japanese copy
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [rebuild-aug2-31]
+    paths:
+      - ".github/workflows/audit-aug2-ja-final.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild-aug2-31
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Apply longest-first metadata localization and audit prose
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import ast, re, textwrap
+
+          workflow = Path('.github/workflows/localize-aug2-ja-metadata.yml').read_text(encoding='utf-8')
+          match = re.search(r"python - <<'PY'\n(.*?)\n\s+PY", workflow, re.S)
+          if not match:
+              raise SystemExit('Cannot extract localization script')
+          source = textwrap.dedent(match.group(1))
+          tree = ast.parse(source)
+          assignment = next(
+              node for node in tree.body
+              if isinstance(node, ast.Assign)
+              and any(isinstance(target, ast.Name) and target.id == 'replacements' for target in node.targets)
+          )
+          replacements = ast.literal_eval(assignment.value)
+          base = Path('content/ja/2026-08-02')
+          for path in base.glob('*.md'):
+              text = path.read_text(encoding='utf-8')
+              for old in sorted(replacements, key=len, reverse=True):
+                  text = text.replace(old, replacements[old])
+              path.write_text(text, encoding='utf-8')
+
+          chinese_markers = ['官方', '网站', '常见问题', '节目官网', '活动票务页', '官方新闻', '赛事概要', '票务与直播', '代表校信息', '灾害应对信息', '电影官方网站', '官方频道', '官方广播信息', '节目页', '出演阵容报道', '协会VNL', '协会决赛轮', '日元干预报道', '幕张展览馆', '富士电视台', '东京电视台', '鬼灭之刃', '超级机器人大战', '高额疗养费', '外汇干预']
+          editorial_markers = ['本稿', 'この記事', '記事では', '記事の内容', '報じる', '報道すべき', 'ニュースとして', 'ニュース価値', '候補', '選定', '公開稿', '書く必要', '書かない', '編集部']
+          problems = []
+          for path in sorted(base.glob('*.md')):
+              for number, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
+                  hits = [term for term in chinese_markers + editorial_markers if term in line]
+                  if hits:
+                      problems.append(f'{path.name}:{number}: {hits}: {line}')
+          if problems:
+              print('\n'.join(problems))
+              raise SystemExit('Japanese copy audit found remaining issues')
+          print('Japanese metadata and prose audit passed')
+          PY
