@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
+import textwrap
 import unittest
 from pathlib import Path
 
@@ -14,6 +16,36 @@ class DailyEditionIntegrityTests(unittest.TestCase):
         self.assertNotIn("/2026/08/02/", renderer)
         self.assertIn('"2026-08-01"', renderer)
         self.assertIn('"2026-08-02"', renderer)
+
+    def test_august_1_grouped_layout_renders_every_report_once(self) -> None:
+        script = textwrap.dedent(
+            """
+            global.window = {XNEWS_ARTICLES: []};
+            for (const name of ['data-1.js','data-2.js','data-3.js','data-4.js','data-5.js']) {
+              require('./assets/' + name);
+            }
+            const layout = require('./assets/site.js');
+            const slugs = layout.EDITIONS['2026-08-01'];
+            const bySlug = Object.fromEntries(window.XNEWS_ARTICLES.map(article => [article.slug, article]));
+            const articles = slugs.map(slug => bySlug[slug]).filter(Boolean);
+            const arranged = layout.arrangeEdition(articles);
+            const rendered = [arranged.lead, ...arranged.featured, ...arranged.groups.flatMap(group => group.items)].filter(Boolean);
+            const unique = new Set(rendered.map(article => article.slug));
+            if (articles.length !== 29) throw new Error(`expected 29 source articles, got ${articles.length}`);
+            if (rendered.length !== 29) throw new Error(`expected 29 rendered articles, got ${rendered.length}`);
+            if (unique.size !== 29) throw new Error(`expected 29 unique articles, got ${unique.size}`);
+            if (arranged.featured.length !== 4) throw new Error(`expected 4 featured articles, got ${arranged.featured.length}`);
+            if (arranged.groups.filter(group => group.items.length).length < 4) throw new Error('expected at least four non-empty editorial groups');
+            """
+        )
+        result = subprocess.run(
+            ["node", "-e", script],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(0, result.returncode, result.stderr)
 
     def test_august_2_public_data_contains_eight_complete_reports(self) -> None:
         text = (ROOT / "assets/data-6.js").read_text(encoding="utf-8")
