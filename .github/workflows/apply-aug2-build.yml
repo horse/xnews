@@ -1,0 +1,51 @@
+name: Apply August 2 rebuild
+
+on:
+  push:
+    branches: [rebuild-aug2-31]
+    paths:
+      - ".build/**"
+      - ".github/workflows/apply-aug2-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild-aug2-31
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reassemble and verify payload
+        run: |
+          cat .build/aug2.part{00..07} > payload.b64
+          echo "8536842a4e8586146147e5d8b512d8ce0d10f7ceecdc44fcab98eafe38e98321  payload.b64" | sha256sum -c -
+          base64 -d payload.b64 > payload.tar.gz
+          echo "0e82a29b5f40f8efec53f408a97ca725eeb6b1f1b50b29ff03c5a1a0e8a61db6  payload.tar.gz" | sha256sum -c -
+      - name: Replace stale August 2 edition
+        run: |
+          rm -rf 2026/08/02/reports content/ja/2026-08-02 ja/2026/08/02
+          find tests tools -type d -name __pycache__ -prune -exec rm -rf {} + || true
+          tar -xzf payload.tar.gz -C .
+      - name: Verify complete bilingual edition
+        run: |
+          python -m unittest tests/test_daily_edition_integrity.py -v
+          node --check assets/site.js
+          test "$(find 2026/08/02/reports -maxdepth 1 -name '*.html' | wc -l)" -eq 31
+          test "$(find content/ja/2026-08-02 -maxdepth 1 -name '*.md' ! -name index.md | wc -l)" -eq 31
+          grep -q '31篇' content/ja/2026-08-02/index.md
+          grep -q '31篇' assets/site.js
+      - name: Commit final edition and remove build machinery
+        run: |
+          rm -rf .build payload.b64 payload.tar.gz
+          rm -f .github/workflows/apply-aug2-build.yml
+          git config user.name "xnews-build-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Rebuild August 2 edition with 31 reports"
+          git push origin HEAD:rebuild-aug2-31
