@@ -12,15 +12,15 @@ categories:
   - "高校野球"
   - "地域文化"
 tags:
-  - "冲绳尚学"
+  - "沖縄尚学"
   - "仙台育英"
   - "札幌日大"
-  - "敦贺气比"
-  - "甲子园抽签"
+  - "敦賀気比"
+  - "甲子園抽選"
 sources:
-  - name: "日本高中棒球联盟代表校信息"
+  - name: "日本高等学校野球連盟 代表校情報"
     url: "https://www.jhbf.or.jp/sensyuken/2026/"
-  - name: "朝日新闻甲子园专题"
+  - name: "朝日新聞 甲子園特集"
     url: "https://www.asahi.com/koshien/"
 ---
 
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [日本高中棒球联盟代表校信息](https://www.jhbf.or.jp/sensyuken/2026/)
-- [朝日新闻甲子园专题](https://www.asahi.com/koshien/)
+- [日本高等学校野球連盟 代表校情報](https://www.jhbf.or.jp/sensyuken/2026/)
+- [朝日新聞 甲子園特集](https://www.asahi.com/koshien/)

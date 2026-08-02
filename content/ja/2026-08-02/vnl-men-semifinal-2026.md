@@ -12,15 +12,15 @@ categories:
   - "バレーボール"
   - "国際大会"
 tags:
-  - "日本男排"
+  - "バレーボール男子日本代表"
   - "VNL 2026"
   - "石川祐希"
-  - "高桥蓝"
-  - "五局比赛"
+  - "髙橋藍"
+  - "フルセット"
 sources:
-  - name: "日本排球协会VNL大会页"
+  - name: "日本バレーボール協会 VNL大会ページ"
     url: "https://www.jva.or.jp/international/2026/vnl_men/"
-  - name: "日本排球协会决赛轮名单"
+  - name: "日本バレーボール協会 ファイナルラウンド登録メンバー"
     url: "https://www.jva.or.jp/topics/20260728-2/"
 ---
 
@@ -34,5 +34,5 @@ VNL 2026男子決勝ラウンドは7月29日から8月2日まで、中国・寧�
 
 ## 出典
 
-- [日本排球协会VNL大会页](https://www.jva.or.jp/international/2026/vnl_men/)
-- [日本排球协会决赛轮名单](https://www.jva.or.jp/topics/20260728-2/)
+- [日本バレーボール協会 VNL大会ページ](https://www.jva.or.jp/international/2026/vnl_men/)
+- [日本バレーボール協会 ファイナルラウンド登録メンバー](https://www.jva.or.jp/topics/20260728-2/)

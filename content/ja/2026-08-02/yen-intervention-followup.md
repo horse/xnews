@@ -12,13 +12,13 @@ categories:
   - "金融"
   - "日本経済"
 tags:
-  - "日元"
-  - "外汇干预"
-  - "美国财政部"
-  - "纽约联储"
-  - "汇率检查"
+  - "円"
+  - "為替介入"
+  - "米財務省"
+  - "ニューヨーク連銀"
+  - "レートチェック"
 sources:
-  - name: "Reuters日元干预报道"
+  - name: "Reuters 円介入報道"
     url: "https://www.reuters.com/world/asia-pacific/us-treasury-informed-banks-that-it-may-intervene-yen-source-says-2026-07-31/"
 ---
 
@@ -32,4 +32,4 @@ sources:
 
 ## 出典
 
-- [Reuters日元干预报道](https://www.reuters.com/world/asia-pacific/us-treasury-informed-banks-that-it-may-intervene-yen-source-says-2026-07-31/)
+- [Reuters 円介入報道](https://www.reuters.com/world/asia-pacific/us-treasury-informed-banks-that-it-may-intervene-yen-source-says-2026-07-31/)

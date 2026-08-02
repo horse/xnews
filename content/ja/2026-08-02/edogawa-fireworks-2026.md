@@ -12,13 +12,13 @@ categories:
   - "地域イベント"
   - "東京"
 tags:
-  - "江户川区花火大会"
+  - "江戸川区花火大会"
   - "花火大会"
-  - "篠崎公园"
-  - "音乐烟花"
-  - "东京夏季"
+  - "篠崎公園"
+  - "音楽花火"
+  - "東京の夏"
 sources:
-  - name: "江户川区大会公告"
+  - name: "江戸川区 大会案内"
     url: "https://www.city.edogawa.tokyo.jp/e004/kuseijoho/kohokocho/press/2026/07/0724.html"
   - name: "江户川区大会看点"
     url: "https://www.city.edogawa.tokyo.jp/hanabi/guide/midokoro.html"
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [江户川区大会公告](https://www.city.edogawa.tokyo.jp/e004/kuseijoho/kohokocho/press/2026/07/0724.html)
+- [江戸川区 大会案内](https://www.city.edogawa.tokyo.jp/e004/kuseijoho/kohokocho/press/2026/07/0724.html)
 - [江户川区大会看点](https://www.city.edogawa.tokyo.jp/hanabi/guide/midokoro.html)

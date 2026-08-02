@@ -12,13 +12,13 @@ categories:
   - "プロ野球"
   - "横浜"
 tags:
-  - "横滨DeNA海湾之星"
+  - "横浜DeNAベイスターズ"
   - "横浜優勝"
   - "baystars"
-  - "东京巨蛋"
-  - "职业棒球"
+  - "東京ドーム"
+  - "プロ野球"
 sources:
-  - name: "DeNA 8月比赛日程"
+  - name: "DeNA 8月試合日程"
     url: "https://sp.baystars.co.jp/game/schedule/2026/8"
   - name: "日本棒球机构赛程"
     url: "https://www.npb.or.jp/games/2026/schedule_08_detail.html"
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [DeNA 8月比赛日程](https://sp.baystars.co.jp/game/schedule/2026/8)
+- [DeNA 8月試合日程](https://sp.baystars.co.jp/game/schedule/2026/8)
 - [日本棒球机构赛程](https://www.npb.or.jp/games/2026/schedule_08_detail.html)

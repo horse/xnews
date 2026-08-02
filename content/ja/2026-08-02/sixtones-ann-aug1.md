@@ -15,12 +15,12 @@ tags:
   - "SixTONES"
   - "All Night Nippon"
   - "SixTONESANN"
-  - "高地优吾"
-  - "田中树"
+  - "髙地優吾"
+  - "田中樹"
 sources:
-  - name: "SixTONES官方广播信息"
+  - name: "SixTONES 公式ラジオ情報"
     url: "https://www.sixtones.jp/news/034/"
-  - name: "日本放送节目官网"
+  - name: "ニッポン放送 番組公式"
     url: "https://www.allnightnippon.com/sixtones/"
 ---
 
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [SixTONES官方广播信息](https://www.sixtones.jp/news/034/)
-- [日本放送节目官网](https://www.allnightnippon.com/sixtones/)
+- [SixTONES 公式ラジオ情報](https://www.sixtones.jp/news/034/)
+- [ニッポン放送 番組公式](https://www.allnightnippon.com/sixtones/)

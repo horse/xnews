@@ -18,9 +18,9 @@ tags:
   - "King & Prince"
   - "乃木坂46"
 sources:
-  - name: "NHK Venue101节目页"
+  - name: "NHK Venue101 番組ページ"
     url: "https://www.nhk.jp/p/venue101/"
-  - name: "出演阵容报道"
+  - name: "出演者情報"
     url: "https://ggtnews.net/articles/PRndS.amp"
 ---
 
@@ -34,5 +34,5 @@ NHK総合の音楽番組「Venue101」が8月1日夜に放送された。ILLIT�
 
 ## 出典
 
-- [NHK Venue101节目页](https://www.nhk.jp/p/venue101/)
-- [出演阵容报道](https://ggtnews.net/articles/PRndS.amp)
+- [NHK Venue101 番組ページ](https://www.nhk.jp/p/venue101/)
+- [出演者情報](https://ggtnews.net/articles/PRndS.amp)

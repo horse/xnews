@@ -14,15 +14,15 @@ categories:
 tags:
   - "熊本"
   - "地震"
-  - "避难所"
-  - "灾区支援"
-  - "自卫队"
+  - "避難所"
+  - "被災地支援"
+  - "自衛隊"
 sources:
-  - name: "首相官邸记者会"
+  - name: "首相官邸 記者会見"
     url: "https://www.kantei.go.jp/jp/105/statement/2026/0728kaiken.html"
-  - name: "防卫省灾害应对信息"
+  - name: "防衛省 災害対応情報"
     url: "https://www.mod.go.jp/j/press/kisha/2026/0728c_r.html"
-  - name: "数字厅灾害信息"
+  - name: "デジタル庁 災害情報"
     url: "https://www.digital.go.jp/news/0af1c2ec-b5f1-430b-abc6-cdbbe9952292"
 ---
 
@@ -36,6 +36,6 @@ sources:
 
 ## 出典
 
-- [首相官邸记者会](https://www.kantei.go.jp/jp/105/statement/2026/0728kaiken.html)
-- [防卫省灾害应对信息](https://www.mod.go.jp/j/press/kisha/2026/0728c_r.html)
-- [数字厅灾害信息](https://www.digital.go.jp/news/0af1c2ec-b5f1-430b-abc6-cdbbe9952292)
+- [首相官邸 記者会見](https://www.kantei.go.jp/jp/105/statement/2026/0728kaiken.html)
+- [防衛省 災害対応情報](https://www.mod.go.jp/j/press/kisha/2026/0728c_r.html)
+- [デジタル庁 災害情報](https://www.digital.go.jp/news/0af1c2ec-b5f1-430b-abc6-cdbbe9952292)

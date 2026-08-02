@@ -12,14 +12,14 @@ categories:
   - "アニメ"
   - "テレビ"
 tags:
-  - "魔法少女奈叶"
+  - "魔法少女リリカルなのは"
   - "EXCEEDS Gun Blaze Vengeance"
   - "なのはEXGV"
-  - "第5话"
+  - "第5話"
 sources:
-  - name: "动画官方网站"
+  - name: "アニメ公式サイト"
     url: "https://www.nanoha.com/EXGV/"
-  - name: "官方播出信息"
+  - name: "公式放送情報"
     url: "https://www.nanoha.com/EXGV/onair/"
 ---
 
@@ -33,5 +33,5 @@ sources:
 
 ## 出典
 
-- [动画官方网站](https://www.nanoha.com/EXGV/)
-- [官方播出信息](https://www.nanoha.com/EXGV/onair/)
+- [アニメ公式サイト](https://www.nanoha.com/EXGV/)
+- [公式放送情報](https://www.nanoha.com/EXGV/onair/)

@@ -14,13 +14,13 @@ categories:
 tags:
   - "Fate/Grand Order"
   - "FGO Fes. 2026"
-  - "幕张展览馆"
+  - "幕張メッセ"
   - "11周年"
   - "水着リリス"
 sources:
-  - name: "FGO Fes. 2026 官方网站"
+  - name: "FGO Fes. 2026 公式サイト"
     url: "https://fes.fate-go.jp/about/"
-  - name: "FGO Fes. 2026 常见问题"
+  - name: "FGO Fes. 2026 よくある質問"
     url: "https://fes.fate-go.jp/about/faq/"
 ---
 
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [FGO Fes. 2026 官方网站](https://fes.fate-go.jp/about/)
-- [FGO Fes. 2026 常见问题](https://fes.fate-go.jp/about/faq/)
+- [FGO Fes. 2026 公式サイト](https://fes.fate-go.jp/about/)
+- [FGO Fes. 2026 よくある質問](https://fes.fate-go.jp/about/faq/)

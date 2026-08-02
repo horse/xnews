@@ -12,15 +12,15 @@ categories:
   - "ゲーム"
   - "コラボ"
 tags:
-  - "荒野行动"
-  - "鬼灭之刃"
-  - "无限城"
-  - "联动"
-  - "灶门祢豆子"
+  - "荒野行動"
+  - "鬼滅の刃"
+  - "無限城"
+  - "コラボ"
+  - "竈門禰豆子"
 sources:
-  - name: "《鬼灭之刃》官方公告"
+  - name: "「鬼滅の刃」公式発表"
     url: "https://kimetsu.com/anime/news/?id=70914"
-  - name: "《鬼灭之刃》官方门户"
+  - name: "「鬼滅の刃」公式ポータル"
     url: "https://kimetsu.com/news/?id=70914&p=1"
 ---
 
@@ -34,5 +34,5 @@ NetEase Gamesが運営する「荒野行動」と「鬼滅の刃」のコラボ�
 
 ## 出典
 
-- [《鬼灭之刃》官方公告](https://kimetsu.com/anime/news/?id=70914)
-- [《鬼灭之刃》官方门户](https://kimetsu.com/news/?id=70914&p=1)
+- [「鬼滅の刃」公式発表](https://kimetsu.com/anime/news/?id=70914)
+- [「鬼滅の刃」公式ポータル](https://kimetsu.com/news/?id=70914&p=1)

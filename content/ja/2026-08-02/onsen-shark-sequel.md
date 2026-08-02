@@ -12,13 +12,13 @@ categories:
   - "映画"
   - "ネット文化"
 tags:
-  - "温泉鲨"
   - "温泉シャーク"
-  - "日本电影"
-  - "怪兽电影"
-  - "独立电影"
+  - "温泉シャーク"
+  - "日本映画"
+  - "怪獣映画"
+  - "インディペンデント映画"
 sources:
-  - name: "电影官方网站"
+  - name: "映画公式サイト"
     url: "https://hotspringshark.com/"
 ---
 
@@ -32,4 +32,4 @@ sources:
 
 ## 出典
 
-- [电影官方网站](https://hotspringshark.com/)
+- [映画公式サイト](https://hotspringshark.com/)

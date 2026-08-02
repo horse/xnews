@@ -12,15 +12,15 @@ categories:
   - "VTuber"
   - "ネット文化"
 tags:
-  - "樱巫女"
+  - "さくらみこ"
   - "Hololive"
   - "8周年"
-  - "3D直播"
+  - "3D配信"
   - "みこち超重大発表"
 sources:
-  - name: "Hololive樱巫女资料"
+  - name: "Hololiveさくらみこ资料"
     url: "https://hololive.hololivepro.com/talents/sakuramiko/"
-  - name: "樱巫女官方频道"
+  - name: "さくらみこ公式チャンネル"
     url: "https://www.youtube.com/@SakuraMiko"
 ---
 
@@ -34,5 +34,5 @@ VTuberの周年は、記念日であると同時に次の活動を示す発表�
 
 ## 出典
 
-- [Hololive樱巫女资料](https://hololive.hololivepro.com/talents/sakuramiko/)
-- [樱巫女官方频道](https://www.youtube.com/@SakuraMiko)
+- [Hololiveさくらみこ资料](https://hololive.hololivepro.com/talents/sakuramiko/)
+- [さくらみこ公式チャンネル](https://www.youtube.com/@SakuraMiko)

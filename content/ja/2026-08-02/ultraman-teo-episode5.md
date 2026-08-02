@@ -12,15 +12,15 @@ categories:
   - "特撮"
   - "テレビ"
 tags:
-  - "奥特曼特奥"
   - "ウルトラマンテオ"
-  - "普奇"
-  - "宇宙舱"
-  - "东京电视台"
+  - "ウルトラマンテオ"
+  - "プッチー"
+  - "宇宙ポッド"
+  - "テレビ東京"
 sources:
-  - name: "东京电视台节目页"
+  - name: "テレビ東京 番組ページ"
     url: "https://www.tv-tokyo.co.jp/anime/ultraman_teo/"
-  - name: "东京电视台剧情页"
+  - name: "テレビ東京剧情页"
     url: "https://www.tv-tokyo.co.jp/anime/ultraman_teo/episodes/"
 ---
 
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [东京电视台节目页](https://www.tv-tokyo.co.jp/anime/ultraman_teo/)
-- [东京电视台剧情页](https://www.tv-tokyo.co.jp/anime/ultraman_teo/episodes/)
+- [テレビ東京 番組ページ](https://www.tv-tokyo.co.jp/anime/ultraman_teo/)
+- [テレビ東京剧情页](https://www.tv-tokyo.co.jp/anime/ultraman_teo/episodes/)

@@ -12,13 +12,13 @@ categories:
   - "医療"
   - "社会保障"
 tags:
-  - "高额疗养费"
-  - "负担上限"
-  - "医疗保险"
-  - "患者负担"
-  - "厚生劳动省"
+  - "高額療養費"
+  - "負担上限"
+  - "医療保険"
+  - "患者負担"
+  - "厚生労働省"
 sources:
-  - name: "厚生劳动省高额疗养费制度"
+  - name: "厚生労働省高額療養費制度"
     url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html"
 ---
 
@@ -32,4 +32,4 @@ sources:
 
 ## 出典
 
-- [厚生劳动省高额疗养费制度](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html)
+- [厚生労働省高額療養費制度](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html)

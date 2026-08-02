@@ -17,9 +17,9 @@ tags:
   - "ちゅーとりえらいぶ!! 2026"
   - "LaLa arena TOKYO-BAY"
 sources:
-  - name: "活动官方网站"
+  - name: "イベント公式サイト"
     url: "https://tutoliella-live.jp/"
-  - name: "Love Live! Superstar!! 官方网站"
+  - name: "Love Live! Superstar!! 公式サイト"
     url: "https://www.lovelive-anime.jp/yuigaoka/"
 ---
 
@@ -33,5 +33,5 @@ Liella!の単独イベント「ちゅーとりえらいぶ!! 2026」が8月1日�
 
 ## 出典
 
-- [活动官方网站](https://tutoliella-live.jp/)
-- [Love Live! Superstar!! 官方网站](https://www.lovelive-anime.jp/yuigaoka/)
+- [イベント公式サイト](https://tutoliella-live.jp/)
+- [Love Live! Superstar!! 公式サイト](https://www.lovelive-anime.jp/yuigaoka/)

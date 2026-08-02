@@ -12,14 +12,14 @@ categories:
   - "テレビ"
   - "お笑い"
 tags:
-  - "次世代艺人大奖赛"
+  - "お笑いコンテスト"
   - "ツギクル芸人グランプリ"
-  - "富士电视台"
-  - "新人喜剧演员"
+  - "フジテレビ"
+  - "若手芸人"
 sources:
-  - name: "富士电视台节目页"
+  - name: "フジテレビ 番組ページ"
     url: "https://www.fujitv.co.jp/tsugikuru/"
-  - name: "ENGEI 8官方公告"
+  - name: "ENGEI 8 公式発表"
     url: "https://www.fujitv.co.jp/fujitv/news/20260736.html"
 ---
 
@@ -33,5 +33,5 @@ sources:
 
 ## 出典
 
-- [富士电视台节目页](https://www.fujitv.co.jp/tsugikuru/)
-- [ENGEI 8官方公告](https://www.fujitv.co.jp/fujitv/news/20260736.html)
+- [フジテレビ 番組ページ](https://www.fujitv.co.jp/tsugikuru/)
+- [ENGEI 8 公式発表](https://www.fujitv.co.jp/fujitv/news/20260736.html)

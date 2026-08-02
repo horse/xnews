@@ -14,13 +14,13 @@ categories:
 tags:
   - "ACEes"
   - "Arena Tour 2026 V"
-  - "浮所飞贵"
-  - "那须雄登"
-  - "作间龙斗"
+  - "浮所飛貴"
+  - "那須雄登"
+  - "作間龍斗"
 sources:
   - name: "Junior Official Website"
     url: "https://jr-official.starto.jp/s/jr/live/10146"
-  - name: "巡演东京场信息"
+  - name: "ツアー東京公演情報"
     url: "https://www.kyodotokyo.com/acees26/"
 ---
 
@@ -35,4 +35,4 @@ ACEesの「Arena Tour 2026 “V”」をめぐる話題が8月1日朝、一つ�
 ## 出典
 
 - [Junior Official Website](https://jr-official.starto.jp/s/jr/live/10146)
-- [巡演东京场信息](https://www.kyodotokyo.com/acees26/)
+- [ツアー東京公演情報](https://www.kyodotokyo.com/acees26/)

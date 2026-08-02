@@ -12,15 +12,15 @@ categories:
   - "サッカー"
   - "千葉"
 tags:
-  - "千叶银杯"
+  - "千葉ダービー"
   - "ちばぎんカップ"
-  - "柏太阳神"
-  - "JEF联市原千叶"
-  - "地方德比"
+  - "柏レイソル"
+  - "ジェフユナイテッド市原・千葉"
+  - "地域ダービー"
 sources:
-  - name: "千叶银杯赛事概要"
+  - name: "ちばぎんカップ大会概要"
     url: "https://chibagincup.chiba-fa.gr.jp/2026-31cgc/outline/"
-  - name: "千叶银杯票务与直播"
+  - name: "ちばぎんカップ チケット・配信情報"
     url: "https://chibagincup.chiba-fa.gr.jp/2026-31cgc/ticket/"
 ---
 
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [千叶银杯赛事概要](https://chibagincup.chiba-fa.gr.jp/2026-31cgc/outline/)
-- [千叶银杯票务与直播](https://chibagincup.chiba-fa.gr.jp/2026-31cgc/ticket/)
+- [ちばぎんカップ大会概要](https://chibagincup.chiba-fa.gr.jp/2026-31cgc/outline/)
+- [ちばぎんカップ チケット・配信情報](https://chibagincup.chiba-fa.gr.jp/2026-31cgc/ticket/)

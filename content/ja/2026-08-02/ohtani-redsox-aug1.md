@@ -13,14 +13,14 @@ categories:
   - "日本人選手"
 tags:
   - "大谷翔平"
-  - "洛杉矶道奇"
-  - "波士顿红袜"
-  - "本垒打"
+  - "ロサンゼルス・ドジャース"
+  - "ボストン・レッドソックス"
+  - "本塁打"
   - "MLB"
 sources:
   - name: "Reuters MLB综述"
     url: "https://www.reuters.com/sports/mlb-roundup-astros-back-atop-al-west-with-rout-rival-rangers--flm-2026-08-01/"
-  - name: "Reuters膝部不适报道"
+  - name: "Reuters 膝の不調に関する報道"
     url: "https://www.reuters.com/sports/dodgers-hold-shohei-ohtani-knee-soreness-out-lineup--flm-2026-07-31/"
 ---
 
@@ -35,4 +35,4 @@ MLBのロサンゼルス・ドジャースはボストンでレッドソック�
 ## 出典
 
 - [Reuters MLB综述](https://www.reuters.com/sports/mlb-roundup-astros-back-atop-al-west-with-rout-rival-rangers--flm-2026-08-01/)
-- [Reuters膝部不适报道](https://www.reuters.com/sports/dodgers-hold-shohei-ohtani-knee-soreness-out-lineup--flm-2026-07-31/)
+- [Reuters 膝の不調に関する報道](https://www.reuters.com/sports/dodgers-hold-shohei-ohtani-knee-soreness-out-lineup--flm-2026-07-31/)

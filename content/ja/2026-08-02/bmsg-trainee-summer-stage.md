@@ -15,11 +15,11 @@ tags:
   - "BMSG"
   - "BMSG TRAINEE"
   - "BMSG FES"
-  - "六本木新城"
+  - "六本木ヒルズ"
 sources:
-  - name: "BMSG TRAINEE活动票务页"
+  - name: "BMSG TRAINEE イベントチケット情報"
     url: "https://ticket.tv-asahi.co.jp/ex/project/bmsgtrainee_26"
-  - name: "BMSG官方新闻"
+  - name: "BMSG 公式ニュース"
     url: "https://bmsg.tokyo/news/"
 ---
 
@@ -33,5 +33,5 @@ BMSG所属のトレーニーが出演する夏のステージが8月1日、六�
 
 ## 出典
 
-- [BMSG TRAINEE活动票务页](https://ticket.tv-asahi.co.jp/ex/project/bmsgtrainee_26)
-- [BMSG官方新闻](https://bmsg.tokyo/news/)
+- [BMSG TRAINEE イベントチケット情報](https://ticket.tv-asahi.co.jp/ex/project/bmsgtrainee_26)
+- [BMSG 公式ニュース](https://bmsg.tokyo/news/)

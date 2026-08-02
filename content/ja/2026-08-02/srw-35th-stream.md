@@ -12,15 +12,15 @@ categories:
   - "ゲーム"
   - "配信"
 tags:
-  - "超级机器人大战"
+  - "スーパーロボット大戦"
   - "35周年"
   - "JAM Project"
-  - "超级机器人大战Y"
-  - "超级机器人大战DD"
+  - "スーパーロボット大戦Y"
+  - "スーパーロボット大戦DD"
 sources:
-  - name: "35周年纪念直播官方信息"
+  - name: "35周年記念配信 公式情報"
     url: "https://www.suparobo.jp/suparobolive"
-  - name: "35周年官方网站"
+  - name: "35周年公式サイト"
     url: "https://www.suparobo.jp/35thanniversary"
 ---
 
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [35周年纪念直播官方信息](https://www.suparobo.jp/suparobolive)
-- [35周年官方网站](https://www.suparobo.jp/35thanniversary)
+- [35周年記念配信 公式情報](https://www.suparobo.jp/suparobolive)
+- [35周年公式サイト](https://www.suparobo.jp/35thanniversary)

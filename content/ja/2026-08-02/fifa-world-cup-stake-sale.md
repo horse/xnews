@@ -13,12 +13,12 @@ categories:
   - "スポーツビジネス"
 tags:
   - "FIFA"
-  - "世界杯"
-  - "商业权利"
-  - "股权出售"
+  - "ワールドカップ"
+  - "商業権"
+  - "株式売却"
   - "AFC"
 sources:
-  - name: "Reuters报道"
+  - name: "Reuters"
     url: "https://www.reuters.com/sports/soccer/fifa-proceed-with-consultation-process-over-stake-sale-plans-2026-07-31/"
 ---
 
@@ -32,4 +32,4 @@ sources:
 
 ## 出典
 
-- [Reuters报道](https://www.reuters.com/sports/soccer/fifa-proceed-with-consultation-process-over-stake-sale-plans-2026-07-31/)
+- [Reuters](https://www.reuters.com/sports/soccer/fifa-proceed-with-consultation-process-over-stake-sale-plans-2026-07-31/)

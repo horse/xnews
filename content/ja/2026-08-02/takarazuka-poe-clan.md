@@ -12,15 +12,15 @@ categories:
   - "舞台"
   - "漫画原作"
 tags:
-  - "宝塚歌剧"
-  - "波族传奇"
+  - "宝塚歌劇"
+  - "萩尾望都作品"
   - "ポーの一族"
   - "萩尾望都"
-  - "宝塚大剧场"
+  - "宝塚大劇場"
 sources:
-  - name: "宝塚歌剧演出日程"
+  - name: "宝塚歌劇演出日程"
     url: "https://www.kageki.hankyu.co.jp/revue/2026/ponoichizoku/schedule_takarazuka.html"
-  - name: "宝塚歌剧公演信息"
+  - name: "宝塚歌劇 公演情報"
     url: "https://www.kageki.hankyu.co.jp/revue/index.html"
 ---
 
@@ -34,5 +34,5 @@ sources:
 
 ## 出典
 
-- [宝塚歌剧演出日程](https://www.kageki.hankyu.co.jp/revue/2026/ponoichizoku/schedule_takarazuka.html)
-- [宝塚歌剧公演信息](https://www.kageki.hankyu.co.jp/revue/index.html)
+- [宝塚歌劇演出日程](https://www.kageki.hankyu.co.jp/revue/2026/ponoichizoku/schedule_takarazuka.html)
+- [宝塚歌劇 公演情報](https://www.kageki.hankyu.co.jp/revue/index.html)

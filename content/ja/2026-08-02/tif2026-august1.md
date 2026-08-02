@@ -14,13 +14,13 @@ categories:
 tags:
   - "TOKYO IDOL FESTIVAL 2026"
   - "TIF2026"
-  - "台场"
+  - "お台場"
   - "FOD"
-  - "偶像"
+  - "アイドル"
 sources:
-  - name: "TIF 2026官方网站"
+  - name: "TIF 2026 公式サイト"
     url: "https://official.idolfes.com/"
-  - name: "TIF 2026官方新闻"
+  - name: "TIF 2026 公式ニュース"
     url: "https://official.idolfes.com/s/tif2026/news/detail/10002"
 ---
 
@@ -34,5 +34,5 @@ TOKYO IDOL FESTIVAL 2026はお台場で3日間開催され、8月1日は2日目�
 
 ## 出典
 
-- [TIF 2026官方网站](https://official.idolfes.com/)
-- [TIF 2026官方新闻](https://official.idolfes.com/s/tif2026/news/detail/10002)
+- [TIF 2026 公式サイト](https://official.idolfes.com/)
+- [TIF 2026 公式ニュース](https://official.idolfes.com/s/tif2026/news/detail/10002)

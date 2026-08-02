@@ -12,11 +12,11 @@ categories:
   - "プロ野球"
   - "千葉"
 tags:
-  - "千叶罗德海洋"
+  - "千葉ロッテマリーンズ"
   - "まりほー"
   - "ES CON Field"
-  - "职业棒球"
-  - "球迷文化"
+  - "プロ野球"
+  - "ファン文化"
 sources:
   - name: "千叶罗德8月赛程"
     url: "https://www.marines.co.jp/game/calendar/202608/"

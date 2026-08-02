@@ -12,14 +12,14 @@ categories:
   - "テレビ"
   - "生活情報"
 tags:
-  - "周六做什么"
+  - "土曜はナニする!?"
   - "土曜はナニする"
-  - "关西电视台"
-  - "周末生活"
+  - "関西テレビ"
+  - "週末情報"
 sources:
-  - name: "关西电视台节目官网"
+  - name: "関西テレビ 番組公式"
     url: "https://www.ktv.jp/donani/"
-  - name: "节目播出信息"
+  - name: "放送情報"
     url: "https://www.sagatv.co.jp/program/10014050"
 ---
 
@@ -33,5 +33,5 @@ sources:
 
 ## 出典
 
-- [关西电视台节目官网](https://www.ktv.jp/donani/)
-- [节目播出信息](https://www.sagatv.co.jp/program/10014050)
+- [関西テレビ 番組公式](https://www.ktv.jp/donani/)
+- [放送情報](https://www.sagatv.co.jp/program/10014050)
